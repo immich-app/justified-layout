@@ -45,9 +45,10 @@ function getArrayI32FromWasm0(ptr, len) {
     return getInt32ArrayMemory0().subarray(ptr / 4, ptr / 4 + len);
 }
 /**
- * Given an input of aspect ratios representing boxes, returns a vector 4 times its length + 1.
- * The first element is the maximum width across all rows, while the remaining elements are
- * sequences of 4 elements for each box, representing the top, left, width and height positions.
+ * Given an input of aspect ratios representing boxes, returns a vector 4 times its length + 4.
+ * The first element is the maximum width across all rows, the second is the total height required
+ * to display all rows, the next two are padding, and the remaining elements are sequences of 4
+ * elements for each box, representing the top, left, width and height positions.
  * `row_height` is a positive float that is the target height of the row.
  *     It is not strictly followed; the actual height may be off by one due to truncation, and may be
  *     substantially different if only one box can fit on a row and this box cannot fit with the

@@ -9,9 +9,10 @@ pub struct LayoutOptions {
     pub tolerance: f32,
 }
 
-/// Given an input of aspect ratios representing boxes, returns a vector 4 times its length + 1.
-/// The first element is the maximum width across all rows, while the remaining elements are
-/// sequences of 4 elements for each box, representing the top, left, width and height positions.
+/// Given an input of aspect ratios representing boxes, returns a vector 4 times its length + 4.
+/// The first element is the maximum width across all rows, the second is the total height required
+/// to display all rows, the next two are padding, and the remaining elements are sequences of 4 
+/// elements for each box, representing the top, left, width and height positions.
 /// `row_height` is a positive float that is the target height of the row.
 ///     It is not strictly followed; the actual height may be off by one due to truncation, and may be
 ///     substantially different if only one box can fit on a row and this box cannot fit with the
@@ -62,9 +63,12 @@ fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> Vec<i
         let box_width = aspect_ratio * options.row_height;
         cur_row_width += box_width;
 
+        // there are no more boxes that can fit in this row
         if cur_row_width > options.row_width && i > 0 {
             let row = &mut positions[row_start_idx * 4 + 4..i * 4 + 4];
             let aspect_ratio_row = &aspect_ratios[row_start_idx..i];
+
+            // treat the row's boxes as a single entity and scale them to fit the row width
             let total_aspect_ratio: f32 = aspect_ratio_row.iter().sum();
             let spacing_pixels = options.spacing * f32::from(aspect_ratio_row.len() as u16 - 1);
             let scaled_row_height =
