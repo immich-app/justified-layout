@@ -1,0 +1,18 @@
+{
+  "name": "justified_layout",
+  "type": "module",
+  "version": "0.1.0",
+  "license": "AGPL-3",
+  "files": [
+    "justified_layout_bg.wasm",
+    "justified_layout.js",
+    "justified_layout_bg.js",
+    "justified_layout.d.ts"
+  ],
+  "main": "justified_layout.js",
+  "types": "justified_layout.d.ts",
+  "sideEffects": [
+    "./justified_layout.js",
+    "./snippets/*"
+  ]
+}
