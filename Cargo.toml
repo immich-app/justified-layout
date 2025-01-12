@@ -21,6 +21,3 @@ panic = "abort"
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = ["--enable-simd", "--fast-math", "--gufa", "-O3", "--type-finalizing"]
-
-[unstable]
-build-std = ["panic_abort", "std"]
