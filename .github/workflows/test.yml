@@ -19,8 +19,9 @@ jobs:
 
       - uses: actions-rust-lang/setup-rust-toolchain@v1
 
-      - name: Build
-        run: cargo build --verbose
+      - uses: jetli/wasm-pack-action@v0.4.0
+        with:
+          version: v0.13.1
 
       - name: Test
-        run: cargo test --verbose
+        run: wasm-pack test --node
