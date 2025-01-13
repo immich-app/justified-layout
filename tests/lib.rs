@@ -69,6 +69,9 @@ fn applies_spacing() {
     let max_row_width = layout[0];
     assert_eq!(max_row_width, 904);
 
+    let max_row_height = layout[1];
+    assert_eq!(max_row_height, 300);
+
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
@@ -112,6 +115,9 @@ fn expands_row_based_on_height_tolerance() {
     assert_eq!(layout.len(), 16);
     let max_row_width = layout[0];
     assert_eq!(max_row_width, 994);
+
+    let max_row_height = layout[1];
+    assert_eq!(max_row_height, 330);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
@@ -157,6 +163,9 @@ fn adds_second_row_due_to_spacing() {
     let max_row_width = layout[0];
     assert_eq!(max_row_width, 602);
 
+    let max_row_height = layout[1];
+    assert_eq!(max_row_height, 602);
+
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
@@ -200,6 +209,9 @@ fn positions_boxes_with_different_aspect_ratios() {
     assert_eq!(layout.len(), 16);
     let max_row_width = layout[0];
     assert_eq!(max_row_width, 771);
+
+    let max_row_height = layout[1];
+    assert_eq!(max_row_height, 602);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
@@ -245,6 +257,9 @@ fn scales_boxes_with_different_aspect_ratios_when_using_height_tolerance() {
     let max_row_width = layout[0];
     assert_eq!(max_row_width, 900);
 
+    let max_row_height = layout[1];
+    assert_eq!(max_row_height, 712);
+
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
@@ -288,6 +303,9 @@ fn one_square_box_on_each_row() {
     assert_eq!(layout.len(), 16);
     let max_row_width = layout[0];
     assert_eq!(max_row_width, 300);
+
+    let max_row_height = layout[1];
+    assert_eq!(max_row_height, 904);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
@@ -333,6 +351,9 @@ fn different_shaped_boxes_on_each_row() {
     let max_row_width = layout[0];
     assert_eq!(max_row_width, 600);
 
+    let max_row_height = layout[1];
+    assert_eq!(max_row_height, 904);
+
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
@@ -376,6 +397,9 @@ fn one_box_on_each_row_with_scaling() {
     assert_eq!(layout.len(), 16);
     let max_row_width = layout[0];
     assert_eq!(max_row_width, 600);
+
+    let max_row_height = layout[1];
+    assert_eq!(max_row_height, 337 + 2 + 300 + 2 + 345);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
