@@ -17,12 +17,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'lts/*'
-          registry-url: 'https://registry.npmjs.org'
-
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - uses: browser-actions/setup-firefox@v1
 
