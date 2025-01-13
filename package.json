@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "license": "AGPL-3",
   "scripts": {
-    "build": "wasm-pack build --release --no-pack --out-name justified-layout-wasm && rm pkg/.gitignore"
+    "build": "wasm-pack build --release --no-pack --out-name justified-layout-wasm"
   },
   "files": [
     "pkg/justified-layout-wasm.js",
