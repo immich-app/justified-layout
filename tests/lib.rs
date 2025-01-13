@@ -258,7 +258,7 @@ fn scales_boxes_with_different_aspect_ratios_when_using_height_tolerance() {
     assert_eq!(max_row_width, 900);
 
     let max_row_height = layout[1];
-    assert_eq!(max_row_height, 712);
+    assert_eq!(max_row_height, 712 + 1); // 1 to account for ceil()
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
@@ -399,7 +399,7 @@ fn one_box_on_each_row_with_scaling() {
     assert_eq!(max_row_width, 600);
 
     let max_row_height = layout[1];
-    assert_eq!(max_row_height, 337 + 2 + 300 + 2 + 345);
+    assert_eq!(max_row_height, 337 + 2 + 300 + 2 + 345 + 1); // 1 to account for ceil()
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
