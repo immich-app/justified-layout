@@ -24,10 +24,11 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: browser-actions/setup-firefox@v1
 
       - uses: jetli/wasm-pack-action@v0.4.0
         with:
           version: v0.13.1
 
       - name: Test
-        run: wasm-pack test --node
+        run: wasm-pack test --firefox --headless

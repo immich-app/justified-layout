@@ -1,6 +1,8 @@
 use justified_layout::get_justified_layout;
 use wasm_bindgen_test::*;
 
+wasm_bindgen_test::wasm_bindgen_test_configure!(run_in_browser);
+
 #[wasm_bindgen_test]
 fn fits_perfectly_on_one_row() {
     let input: Vec<f32> = vec![1.0, 1.0, 1.0];
