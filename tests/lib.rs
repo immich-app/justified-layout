@@ -20,8 +20,8 @@ fn fits_perfectly_on_one_row() {
     let max_row_width = layout[0];
     assert_eq!(max_row_width, 900);
 
-    let max_row_height = layout[0];
-    assert_eq!(max_row_width, 900);
+    let max_row_height = layout[1];
+    assert_eq!(max_row_height, 300);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
