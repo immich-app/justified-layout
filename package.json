@@ -1,10 +1,10 @@
 {
-  "name": "justified-layout-wasm",
+  "name": "@immich/justified-layout-wasm",
   "type": "module",
   "version": "0.1.0",
   "license": "AGPL-3",
   "scripts": {
-    "build": "wasm-pack build --release --no-pack --out-name justified-layout-wasm"
+    "build": "wasm-pack build --no-pack --out-name justified-layout-wasm"
   },
   "files": [
     "pkg/justified-layout-wasm.js",
