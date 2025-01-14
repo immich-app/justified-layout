@@ -44,6 +44,9 @@ jobs:
       - name: Bump version
         run: cargo set-version --bump "${{ inputs.releaseType }}"
 
+      - name: Get version
+        run: echo "IMMICH_VERSION=$(cargo metadata --format-version 1 --no-deps | jq -r '.packages.[0].version')" >> $GITHUB_ENV
+
       - name: Commit and tag
         id: push-tag
         uses: EndBug/add-and-commit@v9
