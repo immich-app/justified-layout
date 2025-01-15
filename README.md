@@ -1,6 +1,6 @@
 # Justified Layout
 
-A blazingly fast implementation of the justified layout gallery view popularized by Flickr, written in Rust and exported to WebAssembly. Capable of processing hundreds of thousands of boxes in under a millisecond, or 10 million boxes at under 50ms.
+A blazingly fast implementation of the justified layout gallery view popularized by Flickr, written in Rust and exported to WebAssembly. Capable of processing hundreds of thousands of boxes in under a millisecond, or 10 million boxes in under 50ms.
 
 ## Install (JS/TS)
 
