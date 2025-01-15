@@ -61,5 +61,7 @@ for (let i = 0; i < boxes.length; i++) {
 
 PR's are welcome! Also feel free to reach out to the team on [Discord](https://discord.immich.app).
 
+However, it should be noted that the design intent of this package is to be minimal and high performance. The Rust implementation is essentially one function and contains a single `if` statement. As such, there is limited scope for additional features.
+
 ## Technology
 - [wasm-pack](https://rustwasm.github.io/docs/wasm-pack/introduction.html)
