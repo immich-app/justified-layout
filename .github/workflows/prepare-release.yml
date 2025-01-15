@@ -42,7 +42,7 @@ jobs:
       - run: cargo install cargo-edit
 
       - name: Bump version
-        run: cargo set-version --bump "${{ inputs.releaseType }}"
+        run: cargo set-version --bump "${{ inputs.releaseType }}" && npm version ${{ inputs.releaseType }} --no-git-tag-version
 
       - name: Get version
         run: echo "IMMICH_VERSION=$(cargo metadata --format-version 1 --no-deps | jq -r '.packages.[0].version')" >> $GITHUB_ENV
