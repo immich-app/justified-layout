@@ -19,8 +19,7 @@ pub struct LayoutOptions {
 ///     target height. The height cannot exceed this target unless `tolerance` is greater than zero.
 /// `row_width` is a positive float that is the target width of the row.
 ///     It will not be exceeded, but a row may have a shorter width if the boxes cannot fill the row
-///     width given the `tolerance`. Additionally, as the positions are in floats,
-///     rounding them to integers may yield a very slightly different width.
+///     width given the `tolerance`.
 /// `spacing` is a non-negative float that controls the spacing between boxes, including between rows.
 ///     Notably, there is no offset applied in directions where there is no box.
 ///     The first box will have its top and left positions both at 0, not at `spacing`, and so on.
