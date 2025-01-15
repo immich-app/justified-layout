@@ -27,7 +27,7 @@ Usage as a native Rust library for non-Wasm targets is not yet supported.
 npm run build
 ```
 
-## Usage
+## Usage (TS)
 
 ```ts
 import { JustifiedLayout } from '@immich/justified-layout-wasm';
