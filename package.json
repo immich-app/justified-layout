@@ -9,7 +9,8 @@
   "files": [
     "pkg/justified-layout-wasm.js",
     "pkg/justified-layout-wasm_bg.js",
-    "pkg/justified-layout-wasm_bg.wasm"
+    "pkg/justified-layout-wasm_bg.wasm",
+    "pkg/justified-layout-wasm.d.ts"
   ],
   "main": "js/index.ts",
   "sideEffects": [
