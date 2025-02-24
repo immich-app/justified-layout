@@ -20,4 +20,11 @@ strip = true
 panic = "abort"
 
 [package.metadata.wasm-pack.profile.release]
-wasm-opt = ["--enable-simd", "--fast-math", "--gufa", "-O3", "--type-finalizing"]
+wasm-opt = [
+  "--enable-simd",
+  "--fast-math",
+  "--enable-bulk-memory",
+  "--gufa",
+  "-O3",
+  "--type-finalizing",
+]
