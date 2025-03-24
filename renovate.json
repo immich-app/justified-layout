@@ -1,6 +1,5 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ]
+  "extends": ["local>immich-app/.github:renovate-config"],
+  "schedule": "on tuesday"
 }
