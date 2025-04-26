@@ -15,19 +15,19 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       # This sets up .npmrc to use NODE_AUTH_TOKEN below
       # See https://github.com/actions/setup-node/blob/48b90677b6048efbc723b11a94acb950d3f1ac36/src/authutil.ts#L48
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 'lts/*'
           registry-url: 'https://registry.npmjs.org'
 
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@9d7e65c320fdb52dcd45ffaa68deb6c02c8754d9 # v1
 
-      - uses: jetli/wasm-pack-action@v0.4.0
+      - uses: jetli/wasm-pack-action@0d096b08b4e5a7de8c28de67e11e945404e9eefa # v0.4.0
         with:
           version: v0.13.1
 
