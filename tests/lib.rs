@@ -1,7 +1,7 @@
 use justified_layout::get_justified_layout;
 use wasm_bindgen_test::*;
 
-wasm_bindgen_test::wasm_bindgen_test_configure!(run_in_browser);
+wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen_test]
 fn fits_perfectly_on_one_row() {
@@ -20,34 +20,34 @@ fn fits_perfectly_on_one_row() {
     );
     assert_eq!(layout.len(), 16);
     let max_row_width = layout[0];
-    assert_eq!(max_row_width, 900);
+    assert_eq!(max_row_width, 900.0);
 
     let max_row_height = layout[1];
-    assert_eq!(max_row_height, 300);
+    assert_eq!(max_row_height, 300.0);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
-    assert_eq!(top1, 0);
-    assert_eq!(left1, 0);
-    assert_eq!(width1, 300);
-    assert_eq!(height1, 300);
+    assert_eq!(top1, 0.0);
+    assert_eq!(left1, 0.0);
+    assert_eq!(width1, 300.0);
+    assert_eq!(height1, 300.0);
 
     let [top2, left2, width2, height2] = layout[8..12] else {
         unreachable!()
     };
-    assert_eq!(top2, 0);
+    assert_eq!(top2, 0.0);
     assert_eq!(left2, width1);
-    assert_eq!(width2, 300);
-    assert_eq!(height2, 300);
+    assert_eq!(width2, 300.0);
+    assert_eq!(height2, 300.0);
 
     let [top3, left3, width3, height3] = layout[12..16] else {
         unreachable!()
     };
-    assert_eq!(top3, 0);
+    assert_eq!(top3, 0.0);
     assert_eq!(left3, width1 + width2);
-    assert_eq!(width3, 300);
-    assert_eq!(height3, 300);
+    assert_eq!(width3, 300.0);
+    assert_eq!(height3, 300.0);
 }
 
 #[wasm_bindgen_test]
@@ -67,34 +67,34 @@ fn applies_spacing() {
     );
     assert_eq!(layout.len(), 16);
     let max_row_width = layout[0];
-    assert_eq!(max_row_width, 904);
+    assert_eq!(max_row_width, 904.0);
 
     let max_row_height = layout[1];
-    assert_eq!(max_row_height, 300);
+    assert_eq!(max_row_height, 300.0);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
-    assert_eq!(top1, 0);
-    assert_eq!(left1, 0);
-    assert_eq!(width1, 300);
-    assert_eq!(height1, 300);
+    assert_eq!(top1, 0.0);
+    assert_eq!(left1, 0.0);
+    assert_eq!(width1, 300.0);
+    assert_eq!(height1, 300.0);
 
     let [top2, left2, width2, height2] = layout[8..12] else {
         unreachable!()
     };
-    assert_eq!(top2, 0);
-    assert_eq!(left2, width1 + spacing as i32);
-    assert_eq!(width2, 300);
-    assert_eq!(height2, 300);
+    assert_eq!(top2, 0.0);
+    assert_eq!(left2, width1 + spacing);
+    assert_eq!(width2, 300.0);
+    assert_eq!(height2, 300.0);
 
     let [top3, left3, width3, height3] = layout[12..16] else {
         unreachable!()
     };
-    assert_eq!(top3, 0);
-    assert_eq!(left3, width1 + spacing as i32 + width2 + spacing as i32);
-    assert_eq!(width3, 300);
-    assert_eq!(height3, 300);
+    assert_eq!(top3, 0.0);
+    assert_eq!(left3, width1 + spacing + width2 + spacing);
+    assert_eq!(width3, 300.0);
+    assert_eq!(height3, 300.0);
 }
 
 #[wasm_bindgen_test]
@@ -114,34 +114,34 @@ fn expands_row_based_on_height_tolerance() {
     );
     assert_eq!(layout.len(), 16);
     let max_row_width = layout[0];
-    assert_eq!(max_row_width, 994);
+    assert_eq!(max_row_width, 994.0);
 
     let max_row_height = layout[1];
-    assert_eq!(max_row_height, 330);
+    assert_eq!(max_row_height, 330.0);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
-    assert_eq!(top1, 0);
-    assert_eq!(left1, 0);
-    assert_eq!(width1, 330);
-    assert_eq!(height1, 330);
+    assert_eq!(top1, 0.0);
+    assert_eq!(left1, 0.0);
+    assert_eq!(width1, 330.0);
+    assert_eq!(height1, 330.0);
 
     let [top2, left2, width2, height2] = layout[8..12] else {
         unreachable!()
     };
-    assert_eq!(top2, 0);
-    assert_eq!(left2, width1 + spacing as i32);
-    assert_eq!(width2, 330);
-    assert_eq!(height2, 330);
+    assert_eq!(top2, 0.0);
+    assert_eq!(left2, width1 + spacing);
+    assert_eq!(width2, 330.0);
+    assert_eq!(height2, 330.0);
 
     let [top3, left3, width3, height3] = layout[12..16] else {
         unreachable!()
     };
-    assert_eq!(top3, 0);
-    assert_eq!(left3, width1 + spacing as i32 + width2 + spacing as i32);
-    assert_eq!(width3, 330);
-    assert_eq!(height3, 330);
+    assert_eq!(top3, 0.0);
+    assert_eq!(left3, width1 + spacing + width2 + spacing);
+    assert_eq!(width3, 330.0);
+    assert_eq!(height3, 330.0);
 }
 
 #[wasm_bindgen_test]
@@ -161,34 +161,34 @@ fn adds_second_row_due_to_spacing() {
     );
     assert_eq!(layout.len(), 16);
     let max_row_width = layout[0];
-    assert_eq!(max_row_width, 602);
+    assert_eq!(max_row_width, 602.0);
 
     let max_row_height = layout[1];
-    assert_eq!(max_row_height, 602);
+    assert_eq!(max_row_height, 602.0);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
-    assert_eq!(top1, 0);
-    assert_eq!(left1, 0);
-    assert_eq!(width1, 300);
-    assert_eq!(height1, 300);
+    assert_eq!(top1, 0.0);
+    assert_eq!(left1, 0.0);
+    assert_eq!(width1, 300.0);
+    assert_eq!(height1, 300.0);
     //
     let [top2, left2, width2, height2] = layout[8..12] else {
         unreachable!()
     };
-    assert_eq!(top2, 0);
-    assert_eq!(left2, width1 + spacing as i32);
-    assert_eq!(width2, 300);
-    assert_eq!(height2, 300);
+    assert_eq!(top2, 0.0);
+    assert_eq!(left2, width1 + spacing);
+    assert_eq!(width2, 300.0);
+    assert_eq!(height2, 300.0);
 
     let [top3, left3, width3, height3] = layout[12..16] else {
         unreachable!()
     };
-    assert_eq!(top3, (row_height + spacing) as i32);
-    assert_eq!(left3, 0);
-    assert_eq!(width3, 300);
-    assert_eq!(height3, 300);
+    assert_eq!(top3, row_height + spacing);
+    assert_eq!(left3, 0.0);
+    assert_eq!(width3, 300.0);
+    assert_eq!(height3, 300.0);
 }
 
 #[wasm_bindgen_test]
@@ -208,34 +208,34 @@ fn positions_boxes_with_different_aspect_ratios() {
     );
     assert_eq!(layout.len(), 16);
     let max_row_width = layout[0];
-    assert_eq!(max_row_width, 771);
+    assert_eq!(max_row_width, 770.75);
 
     let max_row_height = layout[1];
-    assert_eq!(max_row_height, 602);
+    assert_eq!(max_row_height, 602.0);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
-    assert_eq!(top1, 0);
-    assert_eq!(left1, 0);
-    assert_eq!(width1, (300.0 * (16.0 / 9.0)) as i32);
-    assert_eq!(height1, 300);
+    assert_eq!(top1, 0.0);
+    assert_eq!(left1, 0.0);
+    assert_eq!(width1, 300.0 * (16.0 / 9.0));
+    assert_eq!(height1, 300.0);
     //
     let [top2, left2, width2, height2] = layout[8..12] else {
         unreachable!()
     };
-    assert_eq!(top2, height1 + spacing as i32);
-    assert_eq!(left2, 0);
-    assert_eq!(width2, 300 * 2);
-    assert_eq!(height2, 300);
+    assert_eq!(top2, height1 + spacing);
+    assert_eq!(left2, 0.0);
+    assert_eq!(width2, 300.0 * 2.0);
+    assert_eq!(height2, 300.0);
 
     let [top3, left3, width3, height3] = layout[12..16] else {
         unreachable!()
     };
-    assert_eq!(top3, height1 + spacing as i32);
-    assert_eq!(left3, width2 + spacing as i32);
-    assert_eq!(width3, (300.0 * (9.0 / 16.0)) as i32);
-    assert_eq!(height3, 300);
+    assert_eq!(top3, height1 + spacing);
+    assert_eq!(left3, width2 + spacing);
+    assert_eq!(width3, 300.0 * (9.0 / 16.0));
+    assert_eq!(height3, 300.0);
 }
 
 #[wasm_bindgen_test]
@@ -255,34 +255,34 @@ fn scales_boxes_with_different_aspect_ratios_when_using_height_tolerance() {
     );
     assert_eq!(layout.len(), 16);
     let max_row_width = layout[0];
-    assert_eq!(max_row_width, 900);
+    assert_eq!(max_row_width, 900.0);
 
     let max_row_height = layout[1];
-    assert_eq!(max_row_height, 712 + 1); // 1 to account for ceil()
+    assert_eq!(max_row_height, 712.439);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
-    assert_eq!(top1, 0);
-    assert_eq!(left1, 0);
-    assert_eq!(width1, 640);
-    assert_eq!(height1, 360);
+    assert_eq!(top1, 0.0);
+    assert_eq!(left1, 0.0);
+    assert_eq!(width1, 640.0);
+    assert_eq!(height1, 360.0);
     //
     let [top2, left2, width2, height2] = layout[8..12] else {
         unreachable!()
     };
-    assert_eq!(top2, height1 + spacing as i32);
-    assert_eq!(left2, 0);
-    assert_eq!(width2, 700);
-    assert_eq!(height2, 350);
+    assert_eq!(top2, height1 + spacing);
+    assert_eq!(left2, 0.0);
+    assert_eq!(width2, 700.87805);
+    assert_eq!(height2, 350.43903);
 
     let [top3, left3, width3, height3] = layout[12..16] else {
         unreachable!()
     };
-    assert_eq!(top3, height1 + spacing as i32);
-    assert_eq!(left3, width2 + spacing as i32);
-    assert_eq!(width3, 197);
-    assert_eq!(height3, 350);
+    assert_eq!(top3, height1 + spacing);
+    assert_eq!(left3, width2 + spacing);
+    assert_eq!(width3, 197.12195);
+    assert_eq!(height3, 350.43903);
 }
 
 #[wasm_bindgen_test]
@@ -302,34 +302,34 @@ fn one_square_box_on_each_row() {
     );
     assert_eq!(layout.len(), 16);
     let max_row_width = layout[0];
-    assert_eq!(max_row_width, 300);
+    assert_eq!(max_row_width, 300.0);
 
     let max_row_height = layout[1];
-    assert_eq!(max_row_height, 904);
+    assert_eq!(max_row_height, 904.0);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
-    assert_eq!(top1, 0);
-    assert_eq!(left1, 0);
-    assert_eq!(width1, 300);
-    assert_eq!(height1, 300);
+    assert_eq!(top1, 0.0);
+    assert_eq!(left1, 0.0);
+    assert_eq!(width1, 300.0);
+    assert_eq!(height1, 300.0);
 
     let [top2, left2, width2, height2] = layout[8..12] else {
         unreachable!()
     };
-    assert_eq!(top2, height1 + spacing as i32);
-    assert_eq!(left2, 0);
-    assert_eq!(width2, 300);
-    assert_eq!(height2, 300);
+    assert_eq!(top2, height1 + spacing);
+    assert_eq!(left2, 0.0);
+    assert_eq!(width2, 300.0);
+    assert_eq!(height2, 300.0);
 
     let [top3, left3, width3, height3] = layout[12..16] else {
         unreachable!()
     };
-    assert_eq!(top3, height1 + spacing as i32 + height2 + spacing as i32);
-    assert_eq!(left3, 0);
-    assert_eq!(width3, 300);
-    assert_eq!(height3, 300);
+    assert_eq!(top3, height1 + spacing + height2 + spacing);
+    assert_eq!(left3, 0.0);
+    assert_eq!(width3, 300.0);
+    assert_eq!(height3, 300.0);
 }
 
 #[wasm_bindgen_test]
@@ -349,34 +349,34 @@ fn different_shaped_boxes_on_each_row() {
     );
     assert_eq!(layout.len(), 16);
     let max_row_width = layout[0];
-    assert_eq!(max_row_width, 600);
+    assert_eq!(max_row_width, 600.0);
 
     let max_row_height = layout[1];
-    assert_eq!(max_row_height, 904);
+    assert_eq!(max_row_height, 904.0);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
-    assert_eq!(top1, 0);
-    assert_eq!(left1, 0);
-    assert_eq!(width1, 533);
-    assert_eq!(height1, 300);
+    assert_eq!(top1, 0.0);
+    assert_eq!(left1, 0.0);
+    assert_eq!(width1, 533.3333);
+    assert_eq!(height1, 300.0);
     //
     let [top2, left2, width2, height2] = layout[8..12] else {
         unreachable!()
     };
-    assert_eq!(top2, height1 + spacing as i32);
-    assert_eq!(left2, 0);
-    assert_eq!(width2, 600);
-    assert_eq!(height2, 300);
+    assert_eq!(top2, height1 + spacing);
+    assert_eq!(left2, 0.0);
+    assert_eq!(width2, 600.0);
+    assert_eq!(height2, 300.0);
 
     let [top3, left3, width3, height3] = layout[12..16] else {
         unreachable!()
     };
-    assert_eq!(top3, height1 + spacing as i32 + height2 + spacing as i32);
-    assert_eq!(left3, 0);
-    assert_eq!(width3, 168);
-    assert_eq!(height3, 300);
+    assert_eq!(top3, height1 + spacing + height2 + spacing);
+    assert_eq!(left3, 0.0);
+    assert_eq!(width3, 168.75);
+    assert_eq!(height3, 300.0);
 }
 
 #[wasm_bindgen_test]
@@ -396,34 +396,34 @@ fn one_box_on_each_row_with_scaling() {
     );
     assert_eq!(layout.len(), 16);
     let max_row_width = layout[0];
-    assert_eq!(max_row_width, 600);
+    assert_eq!(max_row_width, 600.0);
 
     let max_row_height = layout[1];
-    assert_eq!(max_row_height, 337 + 2 + 300 + 2 + 345 + 1); // 1 to account for ceil()
+    assert_eq!(max_row_height, 337.5 + 2.0 + 300.0 + 2.0 + 345.0);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
-    assert_eq!(top1, 0);
-    assert_eq!(left1, 0);
-    assert_eq!(width1, 600);
-    assert_eq!(height1, 337);
+    assert_eq!(top1, 0.0);
+    assert_eq!(left1, 0.0);
+    assert_eq!(width1, 600.0);
+    assert_eq!(height1, 337.5);
     //
     let [top2, left2, width2, height2] = layout[8..12] else {
         unreachable!()
     };
-    assert_eq!(top2, height1 + spacing as i32);
-    assert_eq!(left2, 0);
-    assert_eq!(width2, 600);
-    assert_eq!(height2, 300);
+    assert_eq!(top2, height1 + spacing);
+    assert_eq!(left2, 0.0);
+    assert_eq!(width2, 600.0);
+    assert_eq!(height2, 300.0);
 
     let [top3, left3, width3, height3] = layout[12..16] else {
         unreachable!()
     };
-    assert_eq!(top3, height1 + spacing as i32 + height2 + spacing as i32);
-    assert_eq!(left3, 0);
-    assert_eq!(width3, 194);
-    assert_eq!(height3, 345);
+    assert_eq!(top3, height1 + spacing + height2 + spacing);
+    assert_eq!(left3, 0.0);
+    assert_eq!(width3, 194.0625);
+    assert_eq!(height3, 345.0);
 }
 
 #[wasm_bindgen_test]
@@ -454,89 +454,89 @@ fn add_box_to_full_row_when_it_helps() {
     // assert_eq!(layout, vec![]);
     assert_eq!(layout.len(), 40);
     let max_row_width = layout[0];
-    assert_eq!(max_row_width, 351);
+    assert_eq!(max_row_width, 350.00003);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
     };
-    assert_eq!(top1, 0);
-    assert_eq!(left1, 0);
-    assert_eq!(width1, 105);
-    assert_eq!(height1, 70);
+    assert_eq!(top1, 0.0);
+    assert_eq!(left1, 0.0);
+    assert_eq!(width1, 105.02475);
+    assert_eq!(height1, 70.0165);
 
     let [top2, left2, width2, height2] = layout[8..12] else {
         unreachable!()
     };
-    assert_eq!(top2, 0);
-    assert_eq!(left2, width1 + spacing as i32);
-    assert_eq!(width2, 46);
-    assert_eq!(height2, 70);
+    assert_eq!(top2, 0.0);
+    assert_eq!(left2, width1 + spacing);
+    assert_eq!(width2, 46.67767);
+    assert_eq!(height2, 70.0165);
 
     let [top3, left3, width3, height3] = layout[12..16] else {
         unreachable!()
     };
-    assert_eq!(top3, 0);
-    assert_eq!(left3, width1 + spacing as i32 + width2 + spacing as i32);
-    assert_eq!(width3, 92);
-    assert_eq!(height3, 70);
+    assert_eq!(top3, 0.0);
+    assert_eq!(left3, width1 + spacing + width2 + spacing);
+    assert_eq!(width3, 92.94225);
+    assert_eq!(height3, 70.0165);
 
     let [top4, left4, width4, height4] = layout[16..20] else {
         unreachable!()
     };
-    assert_eq!(top4, 0);
+    assert_eq!(top4, 0.0);
     assert_eq!(
         left4,
-        width1 + spacing as i32 + width2 + spacing as i32 + width3 + spacing as i32 + 1
+        width1 + spacing + width2 + spacing + width3 + spacing
     );
-    assert_eq!(width4, 93); // should be 92
-    assert_eq!(height4, 70);
+    assert_eq!(width4, 93.35534);
+    assert_eq!(height4, 70.0165);
 
     let [top5, left5, width5, height5] = layout[20..24] else {
         unreachable!()
     };
-    assert_eq!(top5, height1 + spacing as i32);
-    assert_eq!(left5, 0);
-    assert_eq!(width5, 58);
-    assert_eq!(height5, 78);
+    assert_eq!(top5, height1 + spacing);
+    assert_eq!(left5, 0.0);
+    assert_eq!(width5, 58.830894);
+    assert_eq!(height5, 78.267265);
 
     let [top6, left6, width6, height6] = layout[24..28] else {
         unreachable!()
     };
-    assert_eq!(top6, height1 + spacing as i32);
-    assert_eq!(left6, width5 + spacing as i32);
-    assert_eq!(width6, 117);
-    assert_eq!(height6, 78);
+    assert_eq!(top6, height1 + spacing);
+    assert_eq!(left6, width5 + spacing);
+    assert_eq!(width6, 117.400894);
+    assert_eq!(height6, 78.267265);
 
     let [top7, left7, width7, height7] = layout[28..32] else {
         unreachable!()
     };
-    assert_eq!(top7, height1 + spacing as i32);
-    assert_eq!(left7, width5 + spacing as i32 + width6 + spacing as i32 + 1);
-    assert_eq!(width7, 52);
-    assert_eq!(height7, 78);
+    assert_eq!(top7, height1 + spacing);
+    assert_eq!(left7, width5 + spacing + width6 + spacing);
+    assert_eq!(width7, 52.047733);
+    assert_eq!(height7, 78.267265);
 
     let [top8, left8, width8, height8] = layout[32..36] else {
         unreachable!()
     };
-    assert_eq!(top8, height1 + spacing as i32);
+    assert_eq!(top8, height1 + spacing);
     assert_eq!(
         left8,
-        width5 + spacing as i32 + width6 + spacing as i32 + width7 + spacing as i32 + 1
+        width5 + spacing + width6 + spacing + width7 + spacing
     );
-    assert_eq!(width8, 109);
-    assert_eq!(height8, 78);
+    assert_eq!(width8, 109.72047);
+    assert_eq!(height8, 78.267265);
 
     let [top9, left9, width9, height9] = layout[36..40] else {
         unreachable!()
     };
-    assert_eq!(top9, height1 + spacing as i32 + height5 + spacing as i32);
-    assert_eq!(left9, 0);
-    assert_eq!(width9, 115);
-    assert_eq!(height9, 86);
+    assert_eq!(top9, height1 + spacing + height5 + spacing);
+    assert_eq!(left9, 0.0);
+    assert_eq!(width9, 115.5134);
+    assert_eq!(height9, 86.25);
 
     let max_row_height = layout[1];
     assert_eq!(
         max_row_height,
-        height1 + spacing as i32 + height5 + spacing as i32 + height9 + 1
+        height1 + spacing + height5 + spacing + height9
     );
 }

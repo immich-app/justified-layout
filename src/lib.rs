@@ -1,5 +1,3 @@
-#![feature(slice_as_chunks)]
-
 use wasm_bindgen::prelude::*;
 
 pub struct LayoutOptions {
@@ -40,7 +38,7 @@ pub fn get_justified_layout(
     row_width: f32,
     spacing: f32,
     tolerance: f32,
-) -> Vec<i32> {
+) -> Vec<f32> {
     let options = LayoutOptions {
         row_height,
         row_width,
@@ -52,7 +50,7 @@ pub fn get_justified_layout(
 }
 
 #[inline(always)]
-pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> Vec<i32> {
+pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> Vec<f32> {
     let mut positions = vec![0.0; aspect_ratios.len() * 4 + 4]; // 2 for container width and height, 2 for alignment
     let min_row_height = options.row_height * (1.0 - options.tolerance);
     let max_row_height = options.row_height * (1.0 + options.tolerance);
@@ -66,8 +64,7 @@ pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> V
     let spacing_aspect_ratio = options.spacing / options.row_height;
 
     let mut row_diff = target_row_aspect_ratio;
-    for i in 0..aspect_ratios.len() {
-        let aspect_ratio = aspect_ratios[i];
+    for (i, &aspect_ratio) in aspect_ratios.into_iter().enumerate() {
         cur_aspect_ratio += aspect_ratio;
         let cur_diff = (cur_aspect_ratio - target_row_aspect_ratio).abs();
 
@@ -87,9 +84,8 @@ pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> V
             let mut left = 0.0;
             // SAFETY: this slice's length is guaranteed to be a multiple of 4
             let row_positions = unsafe { row.as_chunks_unchecked_mut::<4>() };
-            for i in 0..aspect_ratio_row.len() {
-                let pos = &mut row_positions[i];
-                let width = aspect_ratio_row[i] * scaled_row_height;
+            for (&ratio, pos) in aspect_ratio_row.into_iter().zip(row_positions) {
+                let width = ratio * scaled_row_height;
                 pos[0] = top;
                 pos[1] = left;
                 pos[2] = width;
@@ -123,9 +119,8 @@ pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> V
     let mut left = 0.0;
     // SAFETY: this slice's length is guaranteed to be a multiple of 4
     let row_positions = unsafe { row.as_chunks_unchecked_mut::<4>() };
-    for i in 0..aspect_ratio_row.len() {
-        let pos = &mut row_positions[i];
-        let width = aspect_ratio_row[i] * scaled_row_height;
+    for (&ratio, pos) in aspect_ratio_row.into_iter().zip(row_positions) {
+        let width = ratio * scaled_row_height;
         pos[0] = top;
         pos[1] = left;
         pos[2] = width;
@@ -135,8 +130,8 @@ pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> V
     }
     // SAFETY: these indices are guaranteed to be within the vector's bounds
     unsafe {
-        *positions.get_unchecked_mut(0) = actual_row_width.max(max_actual_row_width).ceil();
-        *positions.get_unchecked_mut(1) = (top + scaled_row_height).ceil();
+        *positions.get_unchecked_mut(0) = actual_row_width.max(max_actual_row_width);
+        *positions.get_unchecked_mut(1) = top + scaled_row_height;
     }
-    positions.into_iter().map(|val| val as i32).collect()
+    positions
 }
