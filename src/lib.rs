@@ -1,5 +1,3 @@
-#![feature(slice_as_chunks)]
-
 use wasm_bindgen::prelude::*;
 
 pub struct LayoutOptions {
@@ -40,7 +38,7 @@ pub fn get_justified_layout(
     row_width: f32,
     spacing: f32,
     tolerance: f32,
-) -> Vec<i32> {
+) -> Vec<f32> {
     let options = LayoutOptions {
         row_height,
         row_width,
@@ -52,7 +50,7 @@ pub fn get_justified_layout(
 }
 
 #[inline(always)]
-pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> Vec<i32> {
+pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> Vec<f32> {
     let mut positions = vec![0.0; aspect_ratios.len() * 4 + 4]; // 2 for container width and height, 2 for alignment
     let min_row_height = options.row_height * (1.0 - options.tolerance);
     let max_row_height = options.row_height * (1.0 + options.tolerance);
@@ -135,8 +133,8 @@ pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> V
     }
     // SAFETY: these indices are guaranteed to be within the vector's bounds
     unsafe {
-        *positions.get_unchecked_mut(0) = actual_row_width.max(max_actual_row_width).ceil();
-        *positions.get_unchecked_mut(1) = (top + scaled_row_height).ceil();
+        *positions.get_unchecked_mut(0) = actual_row_width.max(max_actual_row_width);
+        *positions.get_unchecked_mut(1) = top + scaled_row_height;
     }
-    positions.into_iter().map(|val| val as i32).collect()
+    positions
 }
