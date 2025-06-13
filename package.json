@@ -11,8 +11,5 @@
     "pkg/justified-layout-wasm_bg.wasm",
     "pkg/justified-layout-wasm.d.ts"
   ],
-  "main": "js/index.ts",
-  "sideEffects": [
-    "pkg/justified-layout-wasm.js"
-  ]
+  "main": "js/index.ts"
 }
