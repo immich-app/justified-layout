@@ -50,4 +50,13 @@ export class JustifiedLayout {
   getHeight(boxIdx: number) {
     return this.layout[boxIdx * 4 + 7];
   }
+
+  getPosition(boxIdx: number) {
+    return {
+      top: this.layout[boxIdx * 4 + 4],
+      left: this.layout[boxIdx * 4 + 5],
+      width: this.layout[boxIdx * 4 + 6],
+      height: this.layout[boxIdx * 4 + 7]
+    }
+  }
 }

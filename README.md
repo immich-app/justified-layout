@@ -53,10 +53,7 @@ const containerHeight = layout.containerHeight;
 
 for (let i = 0; i < boxes.length; i++) {
   // you can use these values to position each box accordingly
-  const top = layout.getTop(i);
-  const left = layout.getLeft(i);
-  const width = layout.getWidth(i);
-  const height = layout.getHeight(i);
+  const { top, left, width, height } = layout.getPosition(i);
 }
 ```
 
