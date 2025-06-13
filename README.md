@@ -8,9 +8,7 @@ A blazingly fast implementation of the justified layout gallery view popularized
 npm i @immich/justified-layout-wasm
 ```
 
-Note that you will need to have both WebAssembly ESM integration configured for your project. For Vite, this means using [vite-plugin-wasm](https://www.npmjs.com/package/vite-plugin-wasm).
-
-Additionally, you should exclude this package from dependency optimization as it may interfere with the initialization of the Wasm module. For Vite, this means using the `optimizeDeps.exclude` field in `vite.config.js`:
+Note that you should exclude this package from dependency optimization as it may interfere with the initialization of the Wasm module. For Vite, this means using the `optimizeDeps.exclude` field in `vite.config.js`:
 ```js
 ...
 optimizeDeps: {
