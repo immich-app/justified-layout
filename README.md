@@ -8,9 +8,7 @@ A blazingly fast implementation of the justified layout gallery view popularized
 npm i @immich/justified-layout-wasm
 ```
 
-Note that you will need to have both WebAssembly ESM integration and possibly top-level await configured for your project. For Vite, this means using [vite-plugin-wasm](https://www.npmjs.com/package/vite-plugin-wasm) and possibly [vite-plugin-top-level-await](https://www.npmjs.com/package/vite-plugin-top-level-await).
-
-Additionally, you should exclude this package from dependency optimization as it may interfere with the initialization of the Wasm module. For Vite, this means using the `optimizeDeps.exclude` field in `vite.config.js`:
+Note that you should exclude this package from dependency optimization as it may interfere with the initialization of the Wasm module. For Vite, this means using the `optimizeDeps.exclude` field in `vite.config.js`:
 ```js
 ...
 optimizeDeps: {
@@ -30,7 +28,10 @@ npm run build
 ## Usage (TS)
 
 ```ts
-import { JustifiedLayout } from '@immich/justified-layout-wasm';
+import { init, JustifiedLayout } from '@immich/justified-layout-wasm';
+
+// this needs to be called before `JustifiedLayout` can be used with non-empty inputs
+await init();
 
 const boxes = [{ width: 160, height: 90 }, { width: 200, height: 100 }, { width: 90, height: 160 }];
 const aspectRatios = new Float32Array(boxes.map(({ width, height }) => width / height));
@@ -50,10 +51,7 @@ const containerHeight = layout.containerHeight;
 
 for (let i = 0; i < boxes.length; i++) {
   // you can use these values to position each box accordingly
-  const top = layout.getTop(i);
-  const left = layout.getLeft(i);
-  const width = layout.getWidth(i);
-  const height = layout.getHeight(i);
+  const { top, left, width, height } = layout.getPosition(i);
 }
 ```
 

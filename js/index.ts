@@ -1,4 +1,4 @@
-import { get_justified_layout } from '../pkg/justified-layout-wasm.js';
+import init, { initSync, get_justified_layout } from '../pkg/justified-layout-wasm.js';
 
 export interface LayoutOptions {
   rowHeight: number;
@@ -21,7 +21,7 @@ export class JustifiedLayout {
 
   constructor(aspectRatios: Float32Array, { rowHeight, rowWidth, spacing, heightTolerance }: LayoutOptions) {
     if (aspectRatios.length === 0) {
-      this.layout = Float32Array.of(0, 0, 0, 0);
+      this.layout = new Float32Array(4);
     } else {
       this.layout = get_justified_layout(aspectRatios, rowHeight, rowWidth, spacing, heightTolerance);
     }
@@ -50,4 +50,15 @@ export class JustifiedLayout {
   getHeight(boxIdx: number) {
     return this.layout[boxIdx * 4 + 7];
   }
+
+  getPosition(boxIdx: number) {
+    return {
+      top: this.layout[boxIdx * 4 + 4],
+      left: this.layout[boxIdx * 4 + 5],
+      width: this.layout[boxIdx * 4 + 6],
+      height: this.layout[boxIdx * 4 + 7]
+    }
+  }
 }
+
+export { init, initSync };
