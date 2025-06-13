@@ -30,7 +30,7 @@ npm run build
 ## Usage (TS)
 
 ```ts
-import init, { JustifiedLayout } from '@immich/justified-layout-wasm';
+import { init, JustifiedLayout } from '@immich/justified-layout-wasm';
 
 // this needs to be called before `JustifiedLayout` can be used with non-empty inputs
 await init();
