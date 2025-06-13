@@ -35,7 +35,7 @@ dependencies = [
 
 [[package]]
 name = "justified_layout"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "wasm-bindgen",
  "wasm-bindgen-test",
