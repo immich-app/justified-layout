@@ -37,7 +37,7 @@ jobs:
         with:
           token: ${{ steps.generate-token.outputs.token }}
 
-      - uses: actions-rust-lang/setup-rust-toolchain@9d7e65c320fdb52dcd45ffaa68deb6c02c8754d9 # v1
+      - uses: actions-rust-lang/setup-rust-toolchain@fb51252c7ba57d633bc668f941da052e410add48 # v1
 
       - run: cargo install cargo-edit
 
@@ -57,7 +57,7 @@ jobs:
           push: true
 
       - name: Create draft release
-        uses: softprops/action-gh-release@d5382d3e6f2fa7bd53cb749d33091853d4985daf # v2
+        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2
         with:
           draft: true
           tag_name: ${{ env.IMMICH_VERSION }}
