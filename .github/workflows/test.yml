@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - uses: actions-rust-lang/setup-rust-toolchain@fb51252c7ba57d633bc668f941da052e410add48 # v1
-      - uses: browser-actions/setup-firefox@c04e669ab1d810acd2530e553388c1d183d765cf # v1
+      - uses: browser-actions/setup-firefox@5914774dda97099441f02628f8d46411fcfbd208 # v1
 
       - uses: jetli/wasm-pack-action@0d096b08b4e5a7de8c28de67e11e945404e9eefa # v0.4.0
         with:
