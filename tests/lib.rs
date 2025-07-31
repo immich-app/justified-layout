@@ -399,7 +399,7 @@ fn one_box_on_each_row_with_scaling() {
     assert_eq!(max_row_width, 600.0);
 
     let max_row_height = layout[1];
-    assert_eq!(max_row_height, 337.5 + 2.0 + 300.0 + 2.0 + 345.0);
+    assert_eq!(max_row_height, 337.5 + 2.0 + 300.0 + 2.0 + 300.0);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
@@ -422,8 +422,8 @@ fn one_box_on_each_row_with_scaling() {
     };
     assert_eq!(top3, height1 + spacing + height2 + spacing);
     assert_eq!(left3, 0.0);
-    assert_eq!(width3, 194.0625);
-    assert_eq!(height3, 345.0);
+    assert_eq!(width3, 168.75);
+    assert_eq!(height3, 300.0);
 }
 
 #[wasm_bindgen_test]
@@ -451,7 +451,6 @@ fn add_box_to_full_row_when_it_helps() {
         spacing,
         height_tolerance,
     );
-    // assert_eq!(layout, vec![]);
     assert_eq!(layout.len(), 40);
     let max_row_width = layout[0];
     assert_eq!(max_row_width, 350.00003);
@@ -531,8 +530,8 @@ fn add_box_to_full_row_when_it_helps() {
     };
     assert_eq!(top9, height1 + spacing + height5 + spacing);
     assert_eq!(left9, 0.0);
-    assert_eq!(width9, 115.5134);
-    assert_eq!(height9, 86.25);
+    assert_eq!(width9, 104.822235);
+    assert_eq!(height9, 78.267265);
 
     let max_row_height = layout[1];
     assert_eq!(

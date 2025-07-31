@@ -51,8 +51,12 @@ pub fn get_justified_layout(
 
 #[inline(always)]
 pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> Vec<f32> {
+    if aspect_ratios.len() == 0 {
+        return vec![];
+    }
+
     let mut positions = vec![0.0; aspect_ratios.len() * 4 + 4]; // 2 for container width and height, 2 for alignment
-    let min_row_height = options.row_height * (1.0 - options.tolerance);
+    let min_row_height = (options.row_height * (1.0 - options.tolerance)).max(0.0);
     let max_row_height = options.row_height * (1.0 + options.tolerance);
     let mut cur_aspect_ratio = 0.0;
     let mut row_aspect_ratio = 0.0;
@@ -107,14 +111,21 @@ pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> V
 
     // this is the same as in the for loop and processes the last row
     // inlined because it ends up producing much better assembly
-    let row = &mut positions[row_start_idx * 4 + 4..];
     let aspect_ratio_row = &aspect_ratios[row_start_idx..];
     let total_aspect_ratio =
         row_aspect_ratio - (spacing_aspect_ratio * aspect_ratio_row.len() as f32);
     let spacing_pixels = options.spacing * (aspect_ratio_row.len() as u16 - 1) as f32;
-    let scaled_row_height =
-        ((options.row_width - spacing_pixels) / total_aspect_ratio).min(max_row_height);
 
+    let base_row_height = (options.row_width - spacing_pixels) / total_aspect_ratio;
+    // try to match the height of the previous row
+    let scaled_row_height = if row_start_idx > 0 {
+        // SAFETY: this is guaranteed to be within bounds
+        base_row_height.min(unsafe { *positions.get_unchecked(row_start_idx * 4 + 3) })
+    } else {
+        base_row_height.min(max_row_height)
+    };
+
+    let row = &mut positions[row_start_idx * 4 + 4..];
     let mut actual_row_width = spacing_pixels;
     let mut left = 0.0;
     // SAFETY: this slice's length is guaranteed to be a multiple of 4
