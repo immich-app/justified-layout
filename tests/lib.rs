@@ -399,7 +399,7 @@ fn one_box_on_each_row_with_scaling() {
     assert_eq!(max_row_width, 600.0);
 
     let max_row_height = layout[1];
-    assert_eq!(max_row_height, 337.5 + 2.0 + 300.0 + 2.0 + 345.0);
+    assert_eq!(max_row_height, 337.5 + 2.0 + 300.0 + 2.0 + 300.0);
 
     let [top1, left1, width1, height1] = layout[4..8] else {
         unreachable!()
@@ -422,8 +422,8 @@ fn one_box_on_each_row_with_scaling() {
     };
     assert_eq!(top3, height1 + spacing + height2 + spacing);
     assert_eq!(left3, 0.0);
-    assert_eq!(width3, 194.0625);
-    assert_eq!(height3, 345.0);
+    assert_eq!(width3, 168.75);
+    assert_eq!(height3, 300.0);
 }
 
 #[wasm_bindgen_test]
@@ -451,7 +451,6 @@ fn add_box_to_full_row_when_it_helps() {
         spacing,
         height_tolerance,
     );
-    // assert_eq!(layout, vec![]);
     assert_eq!(layout.len(), 40);
     let max_row_width = layout[0];
     assert_eq!(max_row_width, 350.00003);
@@ -531,12 +530,54 @@ fn add_box_to_full_row_when_it_helps() {
     };
     assert_eq!(top9, height1 + spacing + height5 + spacing);
     assert_eq!(left9, 0.0);
-    assert_eq!(width9, 115.5134);
-    assert_eq!(height9, 86.25);
+    assert_eq!(width9, 104.822235);
+    assert_eq!(height9, 78.267265);
 
     let max_row_height = layout[1];
     assert_eq!(
         max_row_height,
         height1 + spacing + height5 + spacing + height9
     );
+}
+
+#[wasm_bindgen_test]
+fn fills_last_row_when_within_max_row_height() {
+    let input: Vec<f32> = vec![
+        1.5,
+        0.6666666666666666,
+        1.3274336283185841,
+        1.3333333333333333,
+        0.7516666666666667,
+        1.5,
+        0.665,
+        1.4018691588785046,
+        1.3392857142857142,
+        0.5625,
+    ];
+    let row_width = 640.0;
+    let row_height = 100.0;
+    let spacing = 2.0;
+    let height_tolerance = 0.2;
+
+    let layout = get_justified_layout(
+        input.as_slice(),
+        row_height,
+        row_width,
+        spacing,
+        height_tolerance,
+    );
+    assert_eq!(layout.len(), 44);
+    let max_row_width = layout[0];
+    assert_eq!(max_row_width, 640.00006);
+
+    let max_row_height = layout[1];
+    assert_eq!(max_row_height, 230.84763);
+
+    let [top10, left10, width10, height10] = layout[40..44] else {
+        unreachable!()
+    };
+    assert_eq!(top10, 115.279915);
+    assert_eq!(left10, 574.99316);
+    assert_eq!(width10, 65.00684);
+    assert_eq!(height10, 115.56772);
 }
