@@ -118,11 +118,15 @@ pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> V
 
     let base_row_height = (options.row_width - spacing_pixels) / total_aspect_ratio;
     // try to match the height of the previous row
-    let scaled_row_height = if row_start_idx > 0 {
-        // SAFETY: this is guaranteed to be within bounds
-        base_row_height.min(unsafe { *positions.get_unchecked(row_start_idx * 4 + 3) })
+    let scaled_row_height = if base_row_height > max_row_height {
+        if row_start_idx > 0 {
+            // SAFETY: this is guaranteed to be within bounds
+            unsafe { *positions.get_unchecked(row_start_idx * 4 + 3) }
+        } else {
+            max_row_height
+        }
     } else {
-        base_row_height.min(max_row_height)
+        base_row_height
     };
 
     let row = &mut positions[row_start_idx * 4 + 4..];
