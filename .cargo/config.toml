@@ -2,4 +2,4 @@
 rustflags = ["-C", "target-feature=+simd128", "-C", "target-feature=-reference-types"]
 
 [unstable]
-build-std = ["panic_abort", "core", "alloc"]
+build-std = ["panic_abort", "std"]
