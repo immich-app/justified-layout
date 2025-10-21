@@ -1,3 +1,8 @@
+#![no_std]
+extern crate alloc;
+
+use alloc::vec;
+use alloc::vec::Vec;
 use wasm_bindgen::prelude::*;
 
 pub struct LayoutOptions {
@@ -5,6 +10,16 @@ pub struct LayoutOptions {
     pub row_width: f32,
     pub spacing: f32,
     pub tolerance: f32,
+}
+
+#[cfg(all(target_arch = "wasm32", not(target_feature = "atomics")))]
+#[global_allocator]
+static A: rlsf::SmallGlobalTlsf = rlsf::SmallGlobalTlsf::new();
+
+#[cfg(not(debug_assertions))]
+#[panic_handler]
+fn panic(_panic: &core::panic::PanicInfo<'_>) -> ! {
+    unreachable!()
 }
 
 /// Given an input of aspect ratios representing boxes, returns a vector 4 times its length + 4.
