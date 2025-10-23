@@ -1,7 +1,7 @@
 {
   "name": "@immich/justified-layout-wasm",
   "type": "module",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "license": "AGPL-3",
   "scripts": {
     "build": "./build.sh"
