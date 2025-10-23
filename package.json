@@ -8,9 +8,9 @@
   },
   "files": [
     "pkg/justified-layout-wasm.js",
-    "pkg/justified-layout-wasm_bg.js",
     "pkg/justified-layout-wasm-module.js",
-    "pkg/justified-layout-wasm.d.ts"
+    "pkg/justified-layout-wasm.d.ts",
+    "pkg/justified-layout-wasm-module.d.ts"
   ],
   "main": "js/index.ts"
 }
