@@ -4,12 +4,12 @@
   "version": "0.3.0",
   "license": "AGPL-3",
   "scripts": {
-    "build": "wasm-pack build --no-pack --out-name justified-layout-wasm --target web"
+    "build": "./build.sh"
   },
   "files": [
     "pkg/justified-layout-wasm.js",
     "pkg/justified-layout-wasm_bg.js",
-    "pkg/justified-layout-wasm_bg.wasm",
+    "pkg/justified-layout-wasm-module.js",
     "pkg/justified-layout-wasm.d.ts"
   ],
   "main": "js/index.ts"

@@ -8,15 +8,6 @@ A blazingly fast implementation of the justified layout gallery view popularized
 npm i @immich/justified-layout-wasm
 ```
 
-Note that you should exclude this package from dependency optimization as it may interfere with the initialization of the Wasm module. For Vite, this means using the `optimizeDeps.exclude` field in `vite.config.js`:
-```js
-...
-optimizeDeps: {
-  exclude: ['@immich/justified-layout-wasm'],
-},
-...
-```
-
 Usage as a native Rust library for non-Wasm targets is not yet supported.
 
 ## Build (WebAssembly)
@@ -29,9 +20,6 @@ npm run build
 
 ```ts
 import { init, JustifiedLayout } from '@immich/justified-layout-wasm';
-
-// this needs to be called before `JustifiedLayout` can be used with non-empty inputs
-await init();
 
 const boxes = [{ width: 160, height: 90 }, { width: 200, height: 100 }, { width: 90, height: 160 }];
 const aspectRatios = new Float32Array(boxes.map(({ width, height }) => width / height));
