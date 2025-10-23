@@ -19,7 +19,7 @@ npm run build
 ## Usage (TS)
 
 ```ts
-import { init, JustifiedLayout } from '@immich/justified-layout-wasm';
+import { JustifiedLayout } from '@immich/justified-layout-wasm';
 
 const boxes = [{ width: 160, height: 90 }, { width: 200, height: 100 }, { width: 90, height: 160 }];
 const aspectRatios = new Float32Array(boxes.map(({ width, height }) => width / height));
