@@ -4,7 +4,8 @@
   "version": "0.4.2",
   "license": "AGPL-3",
   "scripts": {
-    "build": "./build.sh"
+    "build": "./build.sh",
+    "test": "wasm-pack test --firefox --headless"
   },
   "files": [
     "pkg/justified-layout-wasm.js",
