@@ -138,7 +138,7 @@ pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> V
             // SAFETY: this is guaranteed to be within bounds
             unsafe { *positions.get_unchecked(row_start_idx * 4 + 3) }
         } else {
-            max_row_height
+            options.row_height
         }
     } else {
         base_row_height

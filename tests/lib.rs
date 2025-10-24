@@ -100,7 +100,7 @@ fn applies_spacing() {
 #[wasm_bindgen_test]
 fn expands_row_based_on_height_tolerance() {
     let input: Vec<f32> = vec![1.0, 1.0, 1.0];
-    let row_width = 1000.0;
+    let row_width = 994.0;
     let row_height = 300.0;
     let spacing = 2.0;
     let height_tolerance = 0.1;
@@ -142,6 +142,53 @@ fn expands_row_based_on_height_tolerance() {
     assert_eq!(left3, width1 + spacing + width2 + spacing);
     assert_eq!(width3, 330.0);
     assert_eq!(height3, 330.0);
+}
+
+#[wasm_bindgen_test]
+fn uses_target_height_if_max_height_cannot_fill_row() {
+    let input: Vec<f32> = vec![1.0, 1.0, 1.0];
+    let row_width = 1000.0;
+    let row_height = 300.0;
+    let spacing = 2.0;
+    let height_tolerance = 0.1;
+
+    let layout = get_justified_layout(
+        input.as_slice(),
+        row_height,
+        row_width,
+        spacing,
+        height_tolerance,
+    );
+    assert_eq!(layout.len(), 16);
+    let max_row_width = layout[0];
+    assert_eq!(max_row_width, 904.0);
+
+    let max_row_height = layout[1];
+    assert_eq!(max_row_height, 300.0);
+
+    let [top1, left1, width1, height1] = layout[4..8] else {
+        unreachable!()
+    };
+    assert_eq!(top1, 0.0);
+    assert_eq!(left1, 0.0);
+    assert_eq!(width1, 300.0);
+    assert_eq!(height1, 300.0);
+
+    let [top2, left2, width2, height2] = layout[8..12] else {
+        unreachable!()
+    };
+    assert_eq!(top2, 0.0);
+    assert_eq!(left2, width1 + spacing);
+    assert_eq!(width2, 300.0);
+    assert_eq!(height2, 300.0);
+
+    let [top3, left3, width3, height3] = layout[12..16] else {
+        unreachable!()
+    };
+    assert_eq!(top3, 0.0);
+    assert_eq!(left3, width1 + spacing + width2 + spacing);
+    assert_eq!(width3, 300.0);
+    assert_eq!(height3, 300.0);
 }
 
 #[wasm_bindgen_test]
