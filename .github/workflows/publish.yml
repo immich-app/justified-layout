@@ -6,6 +6,8 @@ on:
     types: [published]
 
 permissions:
+  contents: read
+  id-token: write
   packages: write
 
 jobs:
@@ -17,8 +19,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
 
-      # This sets up .npmrc to use NODE_AUTH_TOKEN below
-      # See https://github.com/actions/setup-node/blob/48b90677b6048efbc723b11a94acb950d3f1ac36/src/authutil.ts#L48
       - name: Setup Node
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
         with:
@@ -36,5 +36,3 @@ jobs:
 
       - name: Publish
         run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
