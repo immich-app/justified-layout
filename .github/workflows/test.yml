@@ -25,4 +25,4 @@ jobs:
           version: v0.13.1
 
       - name: Test
-        run: wasm-pack test --firefox --headless
+        run: CARGO_UNSTABLE_BUILD_STD=panic_abort,std wasm-pack test --firefox --headless

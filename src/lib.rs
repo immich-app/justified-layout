@@ -1,10 +1,13 @@
-#![no_std]
+#![cfg_attr(target_arch = "wasm32", no_std)]
+#![feature(portable_simd)]
 extern crate alloc;
 
 use alloc::vec;
 use alloc::vec::Vec;
+#[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::*;
 
+#[derive(Clone, Copy)]
 pub struct LayoutOptions {
     pub row_height: f32,
     pub row_width: f32,
@@ -12,11 +15,11 @@ pub struct LayoutOptions {
     pub tolerance: f32,
 }
 
-#[cfg(all(target_arch = "wasm32", not(target_feature = "atomics")))]
+#[cfg(target_arch = "wasm32")]
 #[global_allocator]
 static A: rlsf::SmallGlobalTlsf = rlsf::SmallGlobalTlsf::new();
 
-#[cfg(not(debug_assertions))]
+#[cfg(target_arch = "wasm32")]
 #[panic_handler]
 fn panic(_panic: &core::panic::PanicInfo<'_>) -> ! {
     unreachable!()
@@ -46,7 +49,7 @@ fn panic(_panic: &core::panic::PanicInfo<'_>) -> ! {
 /// Note: The response being Vec<i32> rather than a struct or list of structs is important, as the
 ///       JS-WASM interop is *massively* slower when moving structs to JS instead of an array and
 ///       importing integers is faster than floats.
-#[wasm_bindgen]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 pub fn get_justified_layout(
     aspect_ratios: &[f32],
     row_height: f32,
@@ -165,3 +168,6 @@ pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> V
     }
     positions
 }
+
+#[cfg(not(target_arch = "wasm32"))]
+pub mod native;
