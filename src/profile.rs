@@ -13,12 +13,7 @@ fn generate_aspect_ratios(n: usize) -> Vec<f32> {
 fn main() {
     let mode = std::env::args().nth(1).unwrap_or_else(|| "both".into());
     let input = generate_aspect_ratios(1_000_000);
-    let options = LayoutOptions {
-        row_height: 235.0,
-        row_width: 1000.0,
-        spacing: 2.0,
-        tolerance: 0.15,
-    };
+    let options = LayoutOptions::new(235.0, 1000.0, 2.0, 0.15);
 
     let iterations = 100;
 

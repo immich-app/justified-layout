@@ -16,12 +16,7 @@ fn generate_aspect_ratios(n: usize) -> Vec<f32> {
     ratios
 }
 
-const OPTIONS: LayoutOptions = LayoutOptions {
-    row_height: 235.0,
-    row_width: 1000.0,
-    spacing: 2.0,
-    tolerance: 0.15,
-};
+const OPTIONS: LayoutOptions = LayoutOptions::new(235.0, 1000.0, 2.0, 0.15);
 
 #[bench]
 fn scalar_100(b: &mut Bencher) {
