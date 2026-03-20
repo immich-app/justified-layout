@@ -147,14 +147,16 @@ impl RowState {
 
         let mut actual_row_width = spacing_pixels;
         let mut left = 0.0f32;
-        // SAFETY: row_positions length is row_ratios.len() * 4, a multiple of 4
-        let chunks = unsafe { row_positions.as_chunks_unchecked_mut::<4>() };
-        for (&ratio, pos) in row_ratios.iter().zip(chunks) {
+        // SAFETY: row_positions has row_ratios.len() * 4 f32s, matching LayoutBox's repr(C) layout
+        let boxes: &mut [LayoutBox] = unsafe {
+            core::slice::from_raw_parts_mut(
+                row_positions.as_mut_ptr() as *mut LayoutBox,
+                row_ratios.len(),
+            )
+        };
+        for (&ratio, b) in row_ratios.iter().zip(boxes.iter_mut()) {
             let width = ratio * scaled_row_height;
-            pos[0] = self.top;
-            pos[1] = left;
-            pos[2] = width;
-            pos[3] = scaled_row_height;
+            *b = LayoutBox { top: self.top, left, width, height: scaled_row_height };
             left += width + options.spacing;
             actual_row_width += width;
         }
@@ -170,11 +172,12 @@ impl RowState {
     }
 }
 
+#[repr(C)]
 pub struct LayoutBox {
-    top: f32,
-    left: f32,
-    width: f32,
-    height: f32,
+    pub top: f32,
+    pub left: f32,
+    pub width: f32,
+    pub height: f32,
 }
 
 pub struct Layout {
