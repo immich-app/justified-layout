@@ -64,10 +64,6 @@ fn panic(_panic: &core::panic::PanicInfo<'_>) -> ! {
 ///     the height can be shorter if shrinking the row height would allow more boxes to fit
 ///     in the row without causing the height to be more off from the target height. A value of 0.15
 ///     signifies that the actual row height may be up to 15% shorter or taller than the target height.
-///
-/// Note: The response being Vec<i32> rather than a struct or list of structs is important, as the
-///       JS-WASM interop is *massively* slower when moving structs to JS instead of an array and
-///       importing integers is faster than floats.
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 pub fn get_justified_layout(
     aspect_ratios: &[f32],
