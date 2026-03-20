@@ -223,12 +223,8 @@ impl Layout {
         Layout { positions }
     }
 
-    pub fn position(&self, i: usize) -> LayoutBox {
-        LayoutBox {
-            top: self.positions[i],
-            left: self.positions[i + 1],
-            width: self.positions[i + 2],
-            height: self.positions[i + 3],
-        }
+    pub fn position(&self, i: usize) -> &LayoutBox {
+        // SAFETY: positions layout is [header..., LayoutBox, LayoutBox, ...] with repr(C) LayoutBox
+        unsafe { &*(self.positions.as_ptr().add( 4 + i * 4) as *const LayoutBox) }
     }
 }
