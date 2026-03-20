@@ -24,11 +24,11 @@ jobs:
         with:
           version: v0.14.0
 
-      - name: Build (native)
-        run: cargo build --release
-
-      - name: Build (Wasm)
+      - name: Build
         run: ./build.sh
 
       - name: Test
         run: cargo test
+
+      - name: Bench
+        run: cargo bench
