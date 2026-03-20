@@ -54,7 +54,9 @@ pub struct Layout {
 impl Layout {
     pub fn new(aspect_ratios: &[f32], options: &LayoutOptions) -> Self {
         if aspect_ratios.is_empty() {
-            return Layout { positions: vec![0.0; 4] };
+            return Layout {
+                positions: vec![0.0; 4],
+            };
         }
 
         let len = aspect_ratios.len() * 4 + 4;
@@ -67,68 +69,70 @@ impl Layout {
 
         // SAFETY: allocated with the same length above
         let mut positions = unsafe { Vec::from_raw_parts(ptr, len, len) };
-        let mut cur_ar = 0.0f32;
-        let mut row_ar = 0.0f32;
-        let mut row_diff = options.target_row_aspect_ratio;
+        let mut cumulative_aspect_ratio = 0.0f32;
+        let mut row_aspect_ratio = 0.0f32;
+        let mut best_diff = options.target_row_aspect_ratio;
         let mut row_start = 0usize;
         let mut top = 0.0f32;
         let mut max_width = 0.0f32;
 
-        for (i, &ar) in aspect_ratios.iter().enumerate() {
-            cur_ar += ar;
+        for (i, &ratio) in aspect_ratios.iter().enumerate() {
+            cumulative_aspect_ratio += ratio;
 
-            let is_full = cur_ar > options.max_row_aspect_ratio
-                || (cur_ar - options.target_row_aspect_ratio).abs() > row_diff;
+            let is_full = cumulative_aspect_ratio > options.max_row_aspect_ratio
+                || (cumulative_aspect_ratio - options.target_row_aspect_ratio).abs() > best_diff;
             if is_full && i > 0 {
-                let (base_h, sp) = row_height(row_ar, i - row_start, options);
-                let h = base_h.min(options.max_row_height);
-                let w = write_row(
+                let (base_height, total_spacing) =
+                    get_row_height(row_aspect_ratio, i - row_start, options);
+                let height = base_height.min(options.max_row_height);
+                let row_width = write_row(
                     &mut positions[row_start * 4 + 4..i * 4 + 4],
                     &aspect_ratios[row_start..i],
-                    h,
+                    height,
                     top,
                     options.spacing,
-                    sp,
+                    total_spacing,
                 );
 
-                top += h + options.spacing;
-                max_width = w.max(max_width);
+                top += height + options.spacing;
+                max_width = row_width.max(max_width);
                 row_start = i;
-                cur_ar = ar;
+                cumulative_aspect_ratio = ratio;
             }
 
-            row_diff = (cur_ar - options.target_row_aspect_ratio).abs();
-            cur_ar += options.spacing_aspect_ratio;
-            row_ar = cur_ar;
+            best_diff = (cumulative_aspect_ratio - options.target_row_aspect_ratio).abs();
+            cumulative_aspect_ratio += options.spacing_aspect_ratio;
+            row_aspect_ratio = cumulative_aspect_ratio;
         }
 
         // Last row: use the previous row's height if it can't fill
-        let (base_h, sp) = row_height(row_ar, aspect_ratios.len() - row_start, options);
-        let prev_h = if row_start > 0 {
+        let (base_height, total_spacing) =
+            get_row_height(row_aspect_ratio, aspect_ratios.len() - row_start, options);
+        let prev_height = if row_start > 0 {
             // SAFETY: row_start * 4 + 3 is within bounds when row_start > 0
             unsafe { *positions.get_unchecked(row_start * 4 + 3) }
         } else {
             options.row_height
         };
-        let h = if base_h > options.max_row_height {
-            prev_h
+        let height = if base_height > options.max_row_height {
+            prev_height
         } else {
-            base_h
+            base_height
         };
-        let w = write_row(
+        let row_width = write_row(
             &mut positions[row_start * 4 + 4..],
             &aspect_ratios[row_start..],
-            h,
+            height,
             top,
             options.spacing,
-            sp,
+            total_spacing,
         );
-        max_width = w.max(max_width);
+        max_width = row_width.max(max_width);
 
         // SAFETY: the first 4 elements are guaranteed within bounds
         unsafe {
             *positions.get_unchecked_mut(0) = max_width;
-            *positions.get_unchecked_mut(1) = top + h;
+            *positions.get_unchecked_mut(1) = top + height;
         }
 
         Layout { positions }
@@ -165,7 +169,7 @@ impl Layout {
 
 /// Compute the unclamped row height and spacing pixels for a completed row.
 #[inline(always)]
-fn row_height(row_aspect_ratio: f32, count: usize, options: &LayoutOptions) -> (f32, f32) {
+fn get_row_height(row_aspect_ratio: f32, count: usize, options: &LayoutOptions) -> (f32, f32) {
     let total_aspect_ratio = row_aspect_ratio - (options.spacing_aspect_ratio * count as f32);
     let spacing_pixels = options.spacing * f32::from(count as u16 - 1);
     let base = (options.row_width - spacing_pixels) / total_aspect_ratio;
@@ -188,9 +192,9 @@ fn write_row(
     let boxes: &mut [Box] = unsafe {
         core::slice::from_raw_parts_mut(positions.as_mut_ptr() as *mut Box, aspect_ratios.len())
     };
-    for (&ratio, b) in aspect_ratios.iter().zip(boxes.iter_mut()) {
+    for (&ratio, item) in aspect_ratios.iter().zip(boxes.iter_mut()) {
         let width = ratio * height;
-        *b = Box {
+        *item = Box {
             top,
             left,
             width,

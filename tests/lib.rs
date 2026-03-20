@@ -218,7 +218,10 @@ fn one_square_box_on_each_row() {
     assert_eq!(boxes[1].width, 300.0);
     assert_eq!(boxes[1].height, 300.0);
 
-    assert_eq!(boxes[2].top, boxes[0].height + spacing + boxes[1].height + spacing);
+    assert_eq!(
+        boxes[2].top,
+        boxes[0].height + spacing + boxes[1].height + spacing
+    );
     assert_eq!(boxes[2].left, 0.0);
     assert_eq!(boxes[2].width, 300.0);
     assert_eq!(boxes[2].height, 300.0);
@@ -246,7 +249,10 @@ fn different_shaped_boxes_on_each_row() {
     assert_eq!(boxes[1].width, 600.0);
     assert_eq!(boxes[1].height, 300.0);
 
-    assert_eq!(boxes[2].top, boxes[0].height + spacing + boxes[1].height + spacing);
+    assert_eq!(
+        boxes[2].top,
+        boxes[0].height + spacing + boxes[1].height + spacing
+    );
     assert_eq!(boxes[2].left, 0.0);
     assert_eq!(boxes[2].width, 168.75);
     assert_eq!(boxes[2].height, 300.0);
@@ -274,7 +280,10 @@ fn one_box_on_each_row_with_scaling() {
     assert_eq!(boxes[1].width, 600.0);
     assert_eq!(boxes[1].height, 300.0);
 
-    assert_eq!(boxes[2].top, boxes[0].height + spacing + boxes[1].height + spacing);
+    assert_eq!(
+        boxes[2].top,
+        boxes[0].height + spacing + boxes[1].height + spacing
+    );
     assert_eq!(boxes[2].left, 0.0);
     assert_eq!(boxes[2].width, 168.75);
     assert_eq!(boxes[2].height, 300.0);
@@ -312,7 +321,10 @@ fn add_box_to_full_row_when_it_helps() {
     assert_eq!(boxes[1].height, 70.0165);
 
     assert_eq!(boxes[2].top, 0.0);
-    assert_eq!(boxes[2].left, boxes[0].width + spacing + boxes[1].width + spacing);
+    assert_eq!(
+        boxes[2].left,
+        boxes[0].width + spacing + boxes[1].width + spacing
+    );
     assert_eq!(boxes[2].width, 92.94225);
     assert_eq!(boxes[2].height, 70.0165);
 
@@ -335,7 +347,10 @@ fn add_box_to_full_row_when_it_helps() {
     assert_eq!(boxes[5].height, 78.267265);
 
     assert_eq!(boxes[6].top, boxes[0].height + spacing);
-    assert_eq!(boxes[6].left, boxes[4].width + spacing + boxes[5].width + spacing);
+    assert_eq!(
+        boxes[6].left,
+        boxes[4].width + spacing + boxes[5].width + spacing
+    );
     assert_eq!(boxes[6].width, 52.047733);
     assert_eq!(boxes[6].height, 78.267265);
 
@@ -347,7 +362,10 @@ fn add_box_to_full_row_when_it_helps() {
     assert_eq!(boxes[7].width, 109.72047);
     assert_eq!(boxes[7].height, 78.267265);
 
-    assert_eq!(boxes[8].top, boxes[0].height + spacing + boxes[4].height + spacing);
+    assert_eq!(
+        boxes[8].top,
+        boxes[0].height + spacing + boxes[4].height + spacing
+    );
     assert_eq!(boxes[8].left, 0.0);
     assert_eq!(boxes[8].width, 104.822235);
     assert_eq!(boxes[8].height, 78.267265);
