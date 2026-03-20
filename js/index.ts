@@ -21,7 +21,7 @@ export class JustifiedLayout {
   layout: Float32Array;
 
   constructor(aspectRatios: Float32Array, { rowHeight, rowWidth, spacing, heightTolerance }: LayoutOptions) {
-    initSync(MODULE);
+    initSync({ module: MODULE });
     if (aspectRatios.length === 0) {
       this.layout = new Float32Array(4);
     } else {
