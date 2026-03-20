@@ -5,7 +5,7 @@
   "license": "AGPL-3",
   "scripts": {
     "build": "./build.sh",
-    "test": "CARGO_UNSTABLE_BUILD_STD=panic_abort,std wasm-pack test --firefox --headless"
+    "test": "node --test js/test.ts"
   },
   "files": [
     "pkg/justified-layout-wasm.js",

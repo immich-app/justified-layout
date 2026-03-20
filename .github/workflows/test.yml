@@ -27,8 +27,11 @@ jobs:
       - name: Build
         run: ./build.sh
 
-      - name: Test
+      - name: Test (native)
         run: cargo test
+
+      - name: Test (Wasm)
+        run: node --test js/test.ts
 
       - name: Bench
         run: cargo bench
