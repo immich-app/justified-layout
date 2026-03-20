@@ -1,8 +1,11 @@
 #![cfg_attr(target_arch = "wasm32", no_std)]
 extern crate alloc;
 
-use alloc::vec;
-use alloc::vec::Vec;
+use alloc::{
+    alloc::{alloc, Layout as AllocLayout},
+    vec,
+    vec::Vec,
+};
 
 #[cfg(target_arch = "wasm32")]
 mod wasm;
@@ -36,7 +39,7 @@ impl LayoutOptions {
 }
 
 #[repr(C)]
-pub struct LayoutBox {
+pub struct Box {
     pub top: f32,
     pub left: f32,
     pub width: f32,
@@ -109,16 +112,16 @@ impl RowState {
 
         let mut actual_row_width = spacing_pixels;
         let mut left = 0.0f32;
-        // SAFETY: row_positions has row_ratios.len() * 4 f32s, matching LayoutBox's repr(C) layout
-        let boxes: &mut [LayoutBox] = unsafe {
+        // SAFETY: row_positions has row_ratios.len() * 4 f32s, matching Box's repr(C) layout
+        let boxes: &mut [Box] = unsafe {
             core::slice::from_raw_parts_mut(
-                row_positions.as_mut_ptr() as *mut LayoutBox,
+                row_positions.as_mut_ptr() as *mut Box,
                 row_ratios.len(),
             )
         };
         for (&ratio, b) in row_ratios.iter().zip(boxes.iter_mut()) {
             let width = ratio * scaled_row_height;
-            *b = LayoutBox {
+            *b = Box {
                 top: self.top,
                 left,
                 width,
@@ -149,7 +152,14 @@ impl Layout {
             return Layout { positions: vec![] };
         }
 
-        let mut positions = vec![0.0; aspect_ratios.len() * 4 + 4];
+        let len = aspect_ratios.len() * 4 + 4;
+        let layout = AllocLayout::array::<f32>(len).unwrap();
+        let ptr = unsafe { alloc(layout) as *mut f32 };
+        if ptr.is_null() {
+            panic!("Could not allocate memory");
+        }
+
+        let mut positions = unsafe { Vec::from_raw_parts(ptr, len, len) };
         let mut state = RowState::new(options);
 
         for (i, &aspect_ratio) in aspect_ratios.into_iter().enumerate() {
@@ -182,16 +192,13 @@ impl Layout {
         Layout { positions }
     }
 
-    pub fn boxes(&self) -> &[LayoutBox] {
+    pub fn boxes(&self) -> &[Box] {
         if self.positions.is_empty() {
             return &[];
         }
-        // SAFETY: positions[4..] is LayoutBox's worth of repr(C) f32s
+        // SAFETY: positions[4..] is Box's worth of repr(C) f32s
         unsafe {
-            core::slice::from_raw_parts(
-                self.positions.as_ptr().add(4) as *const LayoutBox,
-                self.len(),
-            )
+            core::slice::from_raw_parts(self.positions.as_ptr().add(4) as *const Box, self.len())
         }
     }
 
