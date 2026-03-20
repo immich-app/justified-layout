@@ -1,4 +1,5 @@
 #![cfg_attr(target_arch = "wasm32", no_std)]
+#![deny(clippy::undocumented_unsafe_blocks)]
 extern crate alloc;
 
 use alloc::{
@@ -52,17 +53,19 @@ pub struct Layout {
 
 impl Layout {
     pub fn new(aspect_ratios: &[f32], options: &LayoutOptions) -> Self {
-        if aspect_ratios.len() == 0 {
-            return Layout { positions: vec![] };
+        if aspect_ratios.is_empty() {
+            return Layout { positions: vec![0.0; 4] };
         }
 
         let len = aspect_ratios.len() * 4 + 4;
         let layout = AllocLayout::array::<f32>(len).unwrap();
+        // SAFETY: allocate without zero-init; all positions are written before read
         let ptr = unsafe { alloc(layout) as *mut f32 };
         if ptr.is_null() {
             panic!("Could not allocate memory");
         }
 
+        // SAFETY: allocated with the same length above
         let mut positions = unsafe { Vec::from_raw_parts(ptr, len, len) };
         let mut cur_ar = 0.0f32;
         let mut row_ar = 0.0f32;
@@ -101,8 +104,8 @@ impl Layout {
 
         // Last row: use the previous row's height if it can't fill
         let (base_h, sp) = row_height(row_ar, aspect_ratios.len() - row_start, options);
-        // SAFETY: row_start * 4 + 3 is within bounds when row_start > 0
         let prev_h = if row_start > 0 {
+            // SAFETY: row_start * 4 + 3 is within bounds when row_start > 0
             unsafe { *positions.get_unchecked(row_start * 4 + 3) }
         } else {
             options.row_height
@@ -122,6 +125,7 @@ impl Layout {
         );
         max_width = w.max(max_width);
 
+        // SAFETY: the first 4 elements are guaranteed within bounds
         unsafe {
             *positions.get_unchecked_mut(0) = max_width;
             *positions.get_unchecked_mut(1) = top + h;
@@ -141,15 +145,21 @@ impl Layout {
     }
 
     pub fn width(&self) -> f32 {
-        self.positions[0]
+        // SAFETY: the first 4 elements are guaranteed within bounds
+        unsafe { *self.positions.get_unchecked(0) }
     }
 
     pub fn height(&self) -> f32 {
-        self.positions[1]
+        // SAFETY: the first 4 elements are guaranteed within bounds
+        unsafe { *self.positions.get_unchecked(1) }
     }
 
     pub fn len(&self) -> usize {
         (self.positions.len() - 4) / 4
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.positions.len() > 4
     }
 }
 
