@@ -219,8 +219,28 @@ impl Layout {
         Layout { positions }
     }
 
-    pub fn position(&self, i: usize) -> &LayoutBox {
-        // SAFETY: positions layout is [header..., LayoutBox, LayoutBox, ...] with repr(C) LayoutBox
-        unsafe { &*(self.positions.as_ptr().add( 4 + i * 4) as *const LayoutBox) }
+    pub fn boxes(&self) -> &[LayoutBox] {
+        if self.positions.is_empty() {
+            return &[];
+        }
+        // SAFETY: positions[4..] is LayoutBox's worth of repr(C) f32s
+        unsafe {
+            core::slice::from_raw_parts(
+                self.positions.as_ptr().add(4) as *const LayoutBox,
+                self.len(),
+            )
+        }
+    }
+
+    pub fn width(&self) -> f32 {
+        self.positions[0]
+    }
+
+    pub fn height(&self) -> f32 {
+        self.positions[1]
+    }
+
+    pub fn len(&self) -> usize {
+        (self.positions.len() - 4) / 4
     }
 }
