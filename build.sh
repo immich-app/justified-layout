@@ -2,7 +2,7 @@
 
 set -eu
 
-CARGO_UNSTABLE_BUILD_STD=panic_abort,std CARGO_PROFILE_RELEASE_PANIC=immediate-abort \
+CARGO_UNSTABLE_BUILD_STD=panic_abort,std \
   wasm-pack build --no-pack --out-name justified-layout-wasm --target web
 echo "export const MODULE: string;" > pkg/justified-layout-wasm-module.d.ts
 echo "Uint8Array.fromBase64 ??= (string) => Uint8Array.from(atob(string), (c) => c.charCodeAt(0));" > pkg/justified-layout-wasm-module.js

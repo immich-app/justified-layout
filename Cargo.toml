@@ -23,7 +23,7 @@ path = "src/profile.rs"
 [profile.release]
 lto = true
 codegen-units = 1
-debug = true
+panic = "immediate-abort"
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = [
