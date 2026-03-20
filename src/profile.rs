@@ -1,4 +1,4 @@
-use justified_layout::{LayoutOptions, _get_justified_layout, native};
+use justified_layout::{Layout, LayoutOptions};
 
 fn generate_aspect_ratios(n: usize) -> Vec<f32> {
     let mut ratios = Vec::with_capacity(n);
@@ -11,26 +11,17 @@ fn generate_aspect_ratios(n: usize) -> Vec<f32> {
 }
 
 fn main() {
-    let mode = std::env::args().nth(1).unwrap_or_else(|| "both".into());
+    let mode = std::env::args().nth(1).unwrap_or_else(|| "scalar".into());
     let input = generate_aspect_ratios(1_000_000);
     let options = LayoutOptions::new(235.0, 1000.0, 2.0, 0.15);
 
     let iterations = 100;
 
-    if mode == "scalar" || mode == "both" {
+    if mode == "scalar" {
         for _ in 0..iterations {
-            std::hint::black_box(_get_justified_layout(
+            std::hint::black_box(Layout::new(
                 std::hint::black_box(&input),
-                options,
-            ));
-        }
-    }
-
-    if mode == "simd" || mode == "both" {
-        for _ in 0..iterations {
-            std::hint::black_box(native::get_justified_layout_simd(
-                std::hint::black_box(&input),
-                options,
+                &options,
             ));
         }
     }

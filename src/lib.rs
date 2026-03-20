@@ -1,6 +1,4 @@
 #![cfg_attr(target_arch = "wasm32", no_std)]
-#![feature(portable_simd)]
-#![feature(float_algebraic)]
 extern crate alloc;
 
 use alloc::vec;
@@ -34,7 +32,6 @@ impl LayoutOptions {
             spacing_aspect_ratio: spacing / row_height,
         }
     }
-
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -80,8 +77,7 @@ pub fn get_justified_layout(
     tolerance: f32,
 ) -> Vec<f32> {
     let options = LayoutOptions::new(row_height, row_width, spacing, tolerance);
-
-    _get_justified_layout(aspect_ratios, options)
+    Layout::new(aspect_ratios, &options).positions
 }
 
 struct RowState {
@@ -174,42 +170,62 @@ impl RowState {
     }
 }
 
-#[inline(always)]
-pub fn _get_justified_layout(aspect_ratios: &[f32], options: LayoutOptions) -> Vec<f32> {
-    if aspect_ratios.len() == 0 {
-        return vec![];
-    }
-
-    let mut positions = vec![0.0; aspect_ratios.len() * 4 + 4];
-    let mut state = RowState::new(&options);
-
-    for (i, &aspect_ratio) in aspect_ratios.into_iter().enumerate() {
-        state.advance(aspect_ratio);
-
-        if state.is_row_full(&options, i) {
-            state.finalize_row(&mut positions, aspect_ratios, &options, i, None);
-        }
-
-        state.commit(&options);
-    }
-
-    // Last row: use the previous row's height as fallback if it can't fill
-    let prev_row_height = if state.row_start_idx > 0 {
-        // SAFETY: this is guaranteed to be within bounds
-        unsafe { Some(*positions.get_unchecked(state.row_start_idx * 4 + 3)) }
-    } else {
-        Some(options.row_height)
-    };
-    let n = aspect_ratios.len();
-    let top_before = state.top;
-    let scaled_row_height = state.finalize_row(&mut positions, aspect_ratios, &options, n, prev_row_height);
-
-    unsafe {
-        *positions.get_unchecked_mut(0) = state.max_actual_row_width;
-        *positions.get_unchecked_mut(1) = top_before + scaled_row_height;
-    }
-    positions
+pub struct LayoutBox {
+    top: f32,
+    left: f32,
+    width: f32,
+    height: f32,
 }
 
-#[cfg(not(target_arch = "wasm32"))]
-pub mod native;
+pub struct Layout {
+    positions: Vec<f32>,
+}
+
+impl Layout {
+    pub fn new(aspect_ratios: &[f32], options: &LayoutOptions) -> Self {
+        if aspect_ratios.len() == 0 {
+            return Layout { positions: vec![] };
+        }
+
+        let mut positions = vec![0.0; aspect_ratios.len() * 4 + 4];
+        let mut state = RowState::new(options);
+
+        for (i, &aspect_ratio) in aspect_ratios.into_iter().enumerate() {
+            state.advance(aspect_ratio);
+
+            if state.is_row_full(options, i) {
+                state.finalize_row(&mut positions, aspect_ratios, options, i, None);
+            }
+
+            state.commit(options);
+        }
+
+        // Last row: use the previous row's height as fallback if it can't fill
+        let prev_row_height = if state.row_start_idx > 0 {
+            // SAFETY: this is guaranteed to be within bounds
+            unsafe { Some(*positions.get_unchecked(state.row_start_idx * 4 + 3)) }
+        } else {
+            Some(options.row_height)
+        };
+        let n = aspect_ratios.len();
+        let top_before = state.top;
+        let scaled_row_height =
+            state.finalize_row(&mut positions, aspect_ratios, options, n, prev_row_height);
+
+        unsafe {
+            *positions.get_unchecked_mut(0) = state.max_actual_row_width;
+            *positions.get_unchecked_mut(1) = top_before + scaled_row_height;
+        }
+
+        Layout { positions }
+    }
+
+    pub fn position(&self, i: usize) -> LayoutBox {
+        LayoutBox {
+            top: self.positions[i],
+            left: self.positions[i + 1],
+            width: self.positions[i + 2],
+            height: self.positions[i + 3],
+        }
+    }
+}

@@ -3,7 +3,7 @@
 
 extern crate test;
 
-use justified_layout::{LayoutOptions, _get_justified_layout, native};
+use justified_layout::{Layout, LayoutOptions};
 use test::Bencher;
 
 fn generate_aspect_ratios(n: usize) -> Vec<f32> {
@@ -19,61 +19,31 @@ fn generate_aspect_ratios(n: usize) -> Vec<f32> {
 const OPTIONS: LayoutOptions = LayoutOptions::new(235.0, 1000.0, 2.0, 0.15);
 
 #[bench]
-fn scalar_100(b: &mut Bencher) {
+fn layout_100(b: &mut Bencher) {
     let input = generate_aspect_ratios(100);
-    b.iter(|| _get_justified_layout(test::black_box(&input), OPTIONS));
+    b.iter(|| Layout::new(test::black_box(&input), &OPTIONS));
 }
 
 #[bench]
-fn simd_100(b: &mut Bencher) {
-    let input = generate_aspect_ratios(100);
-    b.iter(|| native::get_justified_layout_simd(test::black_box(&input), OPTIONS));
-}
-
-#[bench]
-fn scalar_1000(b: &mut Bencher) {
+fn layout_1000(b: &mut Bencher) {
     let input = generate_aspect_ratios(1_000);
-    b.iter(|| _get_justified_layout(test::black_box(&input), OPTIONS));
+    b.iter(|| Layout::new(test::black_box(&input), &OPTIONS));
 }
 
 #[bench]
-fn simd_1000(b: &mut Bencher) {
-    let input = generate_aspect_ratios(1_000);
-    b.iter(|| native::get_justified_layout_simd(test::black_box(&input), OPTIONS));
-}
-
-#[bench]
-fn scalar_10000(b: &mut Bencher) {
+fn layout_10000(b: &mut Bencher) {
     let input = generate_aspect_ratios(10_000);
-    b.iter(|| _get_justified_layout(test::black_box(&input), OPTIONS));
+    b.iter(|| Layout::new(test::black_box(&input), &OPTIONS));
 }
 
 #[bench]
-fn simd_10000(b: &mut Bencher) {
-    let input = generate_aspect_ratios(10_000);
-    b.iter(|| native::get_justified_layout_simd(test::black_box(&input), OPTIONS));
-}
-
-#[bench]
-fn scalar_100000(b: &mut Bencher) {
+fn layout_100000(b: &mut Bencher) {
     let input = generate_aspect_ratios(100_000);
-    b.iter(|| _get_justified_layout(test::black_box(&input), OPTIONS));
+    b.iter(|| Layout::new(test::black_box(&input), &OPTIONS));
 }
 
 #[bench]
-fn simd_100000(b: &mut Bencher) {
-    let input = generate_aspect_ratios(100_000);
-    b.iter(|| native::get_justified_layout_simd(test::black_box(&input), OPTIONS));
-}
-
-#[bench]
-fn scalar_1000000(b: &mut Bencher) {
+fn layout_1000000(b: &mut Bencher) {
     let input = generate_aspect_ratios(1_000_000);
-    b.iter(|| _get_justified_layout(test::black_box(&input), OPTIONS));
-}
-
-#[bench]
-fn simd_1000000(b: &mut Bencher) {
-    let input = generate_aspect_ratios(1_000_000);
-    b.iter(|| native::get_justified_layout_simd(test::black_box(&input), OPTIONS));
+    b.iter(|| Layout::new(test::black_box(&input), &OPTIONS));
 }
