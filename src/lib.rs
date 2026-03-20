@@ -46,102 +46,6 @@ pub struct Box {
     pub height: f32,
 }
 
-struct RowState {
-    cur_aspect_ratio: f32,
-    row_aspect_ratio: f32,
-    row_diff: f32,
-    row_start_idx: usize,
-    top: f32,
-    max_actual_row_width: f32,
-}
-
-impl RowState {
-    #[inline(always)]
-    fn new(options: &LayoutOptions) -> Self {
-        Self {
-            cur_aspect_ratio: 0.0,
-            row_aspect_ratio: 0.0,
-            row_diff: options.target_row_aspect_ratio,
-            row_start_idx: 0,
-            top: 0.0,
-            max_actual_row_width: 0.0,
-        }
-    }
-
-    #[inline(always)]
-    fn is_row_full(&self, options: &LayoutOptions) -> bool {
-        self.cur_aspect_ratio > options.max_row_aspect_ratio
-            || (self.cur_aspect_ratio - options.target_row_aspect_ratio).abs() > self.row_diff
-    }
-
-    #[inline(always)]
-    fn advance(&mut self, aspect_ratio: f32) {
-        self.cur_aspect_ratio += aspect_ratio;
-    }
-
-    #[inline(always)]
-    fn commit(&mut self, options: &LayoutOptions) {
-        self.row_diff = (self.cur_aspect_ratio - options.target_row_aspect_ratio).abs();
-        self.cur_aspect_ratio += options.spacing_aspect_ratio;
-        self.row_aspect_ratio = self.cur_aspect_ratio;
-    }
-
-    /// Compute row height, write positions, update state for the next row.
-    /// Returns scaled_row_height (needed for last-row container height).
-    #[inline(always)]
-    fn finalize_row(
-        &mut self,
-        positions: &mut [f32],
-        aspect_ratios: &[f32],
-        options: &LayoutOptions,
-        end_idx: usize,
-        prev_row_height: Option<f32>,
-    ) -> f32 {
-        let row_ratios = &aspect_ratios[self.row_start_idx..end_idx];
-        let row_positions = &mut positions[self.row_start_idx * 4 + 4..end_idx * 4 + 4];
-        let count = row_ratios.len();
-
-        let total_aspect_ratio =
-            self.row_aspect_ratio - (options.spacing_aspect_ratio * count as f32);
-        let spacing_pixels = options.spacing * f32::from(count as u16 - 1);
-        let base_row_height = (options.row_width - spacing_pixels) / total_aspect_ratio;
-        let scaled_row_height = match prev_row_height {
-            Some(prev) if base_row_height > options.max_row_height => prev,
-            _ => base_row_height.min(options.max_row_height),
-        };
-
-        let mut actual_row_width = spacing_pixels;
-        let mut left = 0.0f32;
-        // SAFETY: row_positions has row_ratios.len() * 4 f32s, matching Box's repr(C) layout
-        let boxes: &mut [Box] = unsafe {
-            core::slice::from_raw_parts_mut(
-                row_positions.as_mut_ptr() as *mut Box,
-                row_ratios.len(),
-            )
-        };
-        for (&ratio, b) in row_ratios.iter().zip(boxes.iter_mut()) {
-            let width = ratio * scaled_row_height;
-            *b = Box {
-                top: self.top,
-                left,
-                width,
-                height: scaled_row_height,
-            };
-            left += width + options.spacing;
-            actual_row_width += width;
-        }
-
-        self.top += scaled_row_height + options.spacing;
-        self.max_actual_row_width = actual_row_width.max(self.max_actual_row_width);
-        self.row_start_idx = end_idx;
-        if end_idx < aspect_ratios.len() {
-            self.cur_aspect_ratio = aspect_ratios[end_idx];
-            self.row_diff = (self.cur_aspect_ratio - options.target_row_aspect_ratio).abs();
-        }
-        scaled_row_height
-    }
-}
-
 pub struct Layout {
     pub(crate) positions: Vec<f32>,
 }
@@ -160,33 +64,67 @@ impl Layout {
         }
 
         let mut positions = unsafe { Vec::from_raw_parts(ptr, len, len) };
-        let mut state = RowState::new(options);
+        let mut cur_ar = 0.0f32;
+        let mut row_ar = 0.0f32;
+        let mut row_diff = options.target_row_aspect_ratio;
+        let mut row_start = 0usize;
+        let mut top = 0.0f32;
+        let mut max_width = 0.0f32;
 
-        for (i, &aspect_ratio) in aspect_ratios.into_iter().enumerate() {
-            state.advance(aspect_ratio);
+        for (i, &ar) in aspect_ratios.iter().enumerate() {
+            cur_ar += ar;
 
-            if state.is_row_full(options) && i > 0 {
-                state.finalize_row(&mut positions, aspect_ratios, options, i, None);
+            let is_full = cur_ar > options.max_row_aspect_ratio
+                || (cur_ar - options.target_row_aspect_ratio).abs() > row_diff;
+            if is_full && i > 0 {
+                let (base_h, sp) = row_height(row_ar, i - row_start, options);
+                let h = base_h.min(options.max_row_height);
+                let w = write_row(
+                    &mut positions[row_start * 4 + 4..i * 4 + 4],
+                    &aspect_ratios[row_start..i],
+                    h,
+                    top,
+                    options.spacing,
+                    sp,
+                );
+
+                top += h + options.spacing;
+                max_width = w.max(max_width);
+                row_start = i;
+                cur_ar = ar;
             }
 
-            state.commit(options);
+            row_diff = (cur_ar - options.target_row_aspect_ratio).abs();
+            cur_ar += options.spacing_aspect_ratio;
+            row_ar = cur_ar;
         }
 
-        // Last row: use the previous row's height as fallback if it can't fill
-        let prev_row_height = if state.row_start_idx > 0 {
-            // SAFETY: this is guaranteed to be within bounds
-            unsafe { Some(*positions.get_unchecked(state.row_start_idx * 4 + 3)) }
+        // Last row: use the previous row's height if it can't fill
+        let (base_h, sp) = row_height(row_ar, aspect_ratios.len() - row_start, options);
+        // SAFETY: row_start * 4 + 3 is within bounds when row_start > 0
+        let prev_h = if row_start > 0 {
+            unsafe { *positions.get_unchecked(row_start * 4 + 3) }
         } else {
-            Some(options.row_height)
+            options.row_height
         };
-        let n = aspect_ratios.len();
-        let top_before = state.top;
-        let scaled_row_height =
-            state.finalize_row(&mut positions, aspect_ratios, options, n, prev_row_height);
+        let h = if base_h > options.max_row_height {
+            prev_h
+        } else {
+            base_h
+        };
+        let w = write_row(
+            &mut positions[row_start * 4 + 4..],
+            &aspect_ratios[row_start..],
+            h,
+            top,
+            options.spacing,
+            sp,
+        );
+        max_width = w.max(max_width);
 
         unsafe {
-            *positions.get_unchecked_mut(0) = state.max_actual_row_width;
-            *positions.get_unchecked_mut(1) = top_before + scaled_row_height;
+            *positions.get_unchecked_mut(0) = max_width;
+            *positions.get_unchecked_mut(1) = top + h;
         }
 
         Layout { positions }
@@ -213,4 +151,43 @@ impl Layout {
     pub fn len(&self) -> usize {
         (self.positions.len() - 4) / 4
     }
+}
+
+/// Compute the unclamped row height and spacing pixels for a completed row.
+#[inline(always)]
+fn row_height(row_aspect_ratio: f32, count: usize, options: &LayoutOptions) -> (f32, f32) {
+    let total_aspect_ratio = row_aspect_ratio - (options.spacing_aspect_ratio * count as f32);
+    let spacing_pixels = options.spacing * f32::from(count as u16 - 1);
+    let base = (options.row_width - spacing_pixels) / total_aspect_ratio;
+    (base, spacing_pixels)
+}
+
+/// Write positions for a row's items. Returns the actual row width (items + spacing).
+#[inline(always)]
+fn write_row(
+    positions: &mut [f32],
+    aspect_ratios: &[f32],
+    height: f32,
+    top: f32,
+    spacing: f32,
+    spacing_pixels: f32,
+) -> f32 {
+    let mut actual_row_width = spacing_pixels;
+    let mut left = 0.0f32;
+    // SAFETY: positions has aspect_ratios.len() * 4 f32s, matching Box's repr(C) layout
+    let boxes: &mut [Box] = unsafe {
+        core::slice::from_raw_parts_mut(positions.as_mut_ptr() as *mut Box, aspect_ratios.len())
+    };
+    for (&ratio, b) in aspect_ratios.iter().zip(boxes.iter_mut()) {
+        let width = ratio * height;
+        *b = Box {
+            top,
+            left,
+            width,
+            height,
+        };
+        left += width + spacing;
+        actual_row_width += width;
+    }
+    actual_row_width
 }

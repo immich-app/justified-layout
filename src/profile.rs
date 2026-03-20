@@ -19,10 +19,7 @@ fn main() {
 
     if mode == "scalar" {
         for _ in 0..iterations {
-            std::hint::black_box(Layout::new(
-                std::hint::black_box(&input),
-                &options,
-            ));
+            std::hint::black_box(Layout::new(std::hint::black_box(&input), &options));
         }
     }
 }
