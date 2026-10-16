@@ -2,7 +2,7 @@
   "name": "@immich/justified-layout-wasm",
   "type": "module",
   "version": "0.4.3",
-  "license": "AGPL-3",
+  "license": "MIT",
   "scripts": {
     "build": "./build.sh",
     "test": "node --test js/test.ts"
