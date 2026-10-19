@@ -3,6 +3,10 @@
   "type": "module",
   "version": "0.4.4",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/immich-app/justified-layout.git"
+  },
   "scripts": {
     "build": "./build.sh",
     "test": "node --test js/test.ts"
