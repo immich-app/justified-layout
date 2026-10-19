@@ -107,7 +107,7 @@ dependencies = [
 
 [[package]]
 name = "justified_layout"
-version = "0.4.3"
+version = "0.4.4"
 dependencies = [
  "rlsf",
  "wasm-bindgen",
