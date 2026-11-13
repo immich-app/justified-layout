@@ -23,7 +23,6 @@ panic = "immediate-abort"
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = [
-  "--enable-simd",
   "--fast-math",
   "--enable-bulk-memory",
   "--gufa",
